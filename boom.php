@@ -11,6 +11,7 @@ if(!file_exists('./images') || !is_dir('./images')) {
 require_once('inc/Svg_Element.php');
 require_once('inc/Svg_Document.php');
 require_once('inc/Svg_Group.php');
+require_once('inc/Svg_Image.php');
 require_once('inc/Svg_Border.php');
 
 $files = glob('images/*.jpg');
@@ -20,7 +21,19 @@ printf("Found %d images\n", count($files));
 $GLOBALS['page_width'] = 210 * 4;   // A4
 $GLOBALS['page_height'] = 297 * 4;  // A4
 
+$GLOBALS['max_image_width'] = $GLOBALS['page_width'] * 1.5;
+$GLOBALS['max_image_height'] = $GLOBALS['page_height'] * 1.5;
+
+// Set image ratios:
+$GLOBALS['portrait_sizes'] = array(
+    1/1, 2/3
+);
+$GLOBALS['landscape_sizes'] = array(
+    1/1, 3/2
+);
+
 // Layouts:
+
 
 
 // Iterate through the files and add them to pages:
@@ -51,7 +64,11 @@ $svg->addDefinition($group);
 
 $svg->addUse('group01', array('x' => 10, 'y' => 10));*/
 
+// Image test:
+$image = new Svg_Image('./images/DSC00234.jpg');
+$svg->addElement($image);
+
 $border = new Svg_Border();
 $svg->addElement($border);
 
-$svg->parse('output/test.svg');
+$svg->parse('./test.svg');
