@@ -11,6 +11,7 @@ if(!file_exists('./images') || !is_dir('./images')) {
 require_once('inc/Svg_Element.php');
 require_once('inc/Svg_Document.php');
 require_once('inc/Svg_Group.php');
+require_once('inc/Svg_Border.php');
 
 $files = glob('images/*.jpg');
 printf("Found %d images\n", count($files));
@@ -41,5 +42,8 @@ $group->addElement($rect);
 $svg->addDefinition($group);
 
 $svg->addUse('group01', array('x' => 10, 'y' => 10));
+
+$border = new Svg_Border();
+$svg->addElement($border);
 
 $svg->parse('output/test.svg');

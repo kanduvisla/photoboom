@@ -50,4 +50,22 @@ class Svg_Element
         $fromDom = dom_import_simplexml($from);
         $toDom->appendChild($toDom->ownerDocument->importNode($fromDom, true));
     }
+
+    /**
+     * Merge settings
+     *
+     * @param array $defaultSettings
+     * @param array $userSettings
+     * @return array
+     */
+    protected function merge_settings($defaultSettings, $userSettings)
+    {
+        foreach($defaultSettings as $key => $value)
+        {
+            if(isset($userSettings[$key])) {
+                $defaultSettings[$key] = $userSettings[$key];
+            }
+        }
+        return $defaultSettings;
+    }
 }

@@ -24,6 +24,17 @@ class Svg_Document extends Svg_Element
         );
         $this->defs = new SimpleXMLElement('<defs />');
         $this->elements = array();
+
+        // For debugging purposes:
+        $rect = new Svg_Element('rect',
+            array(
+                'width' => $width,
+                'height' => $height,
+                'fill' => '#cccccc'
+            )
+        );
+        $this->addElement($rect);
+        // End debugging purposes
     }
 
     /**
