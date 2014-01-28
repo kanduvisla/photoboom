@@ -21,8 +21,8 @@ class Svg_Border extends Svg_Group
     {
         parent::__construct('border');
 
-        // Merg settings:
-        $attributes = $this->merge_settings(
+        // Merge settings:
+        $attributes = array_merge(
             array(
                 'size' => 20,
                 'border-radius' => 20
@@ -36,7 +36,7 @@ class Svg_Border extends Svg_Group
                 'width' => $GLOBALS['page_width'],
                 'height' => $GLOBALS['page_height'],
                 'fill' => 'yellow',
-                 'mask' => 'url(#border-mask)'
+                'mask' => 'url(#border-mask)'
             ),
             $attributes
         );
@@ -82,7 +82,7 @@ class Svg_Border extends Svg_Group
         $strokeAttributes['ry'] = $maskAttributes['ry'];
         $strokeAttributes['x'] = $maskAttributes['x'];
         $strokeAttributes['y'] = $maskAttributes['y'];
-        $strokeAttributes['fill'] = 'transparent';
+        $strokeAttributes['fill'] = 'none';
         $stroke = new Svg_Element('rect', $strokeAttributes);
         $this->addElement($stroke);
     }

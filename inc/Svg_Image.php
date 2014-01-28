@@ -13,17 +13,6 @@ class Svg_Image extends Svg_Element
         $info = getimagesize($filename);
 
         // Construct the element:
-        $width = $info[0];
-        $height = $info[1];
-        if($width / $height > 1)
-        {
-            // Landscape
-            $newWidth = $GLOBALS['max_image_width'];
-        } else {
-            // Portrait
-
-        }
-
         $attributes = array_merge(
             array(
                 'xlink:xlink:href' => $filename,

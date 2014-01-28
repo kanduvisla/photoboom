@@ -12,6 +12,7 @@ require_once('inc/Svg_Element.php');
 require_once('inc/Svg_Document.php');
 require_once('inc/Svg_Group.php');
 require_once('inc/Svg_Image.php');
+require_once('inc/Svg_Imagebox.php');
 require_once('inc/Svg_Border.php');
 
 $files = glob('images/*.jpg');
@@ -65,7 +66,7 @@ $svg->addDefinition($group);
 $svg->addUse('group01', array('x' => 10, 'y' => 10));*/
 
 // Image test:
-$image = new Svg_Image('./images/DSC00234.jpg');
+$image = new Svg_Imagebox('./images/DSC00234.jpg', array('width' => 300, 'height' => 300, 'x' => 100, 'y' => 100));
 $svg->addElement($image);
 
 $border = new Svg_Border();
