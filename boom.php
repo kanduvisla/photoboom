@@ -16,17 +16,25 @@ require_once('inc/Svg_Border.php');
 $files = glob('images/*.jpg');
 printf("Found %d images\n", count($files));
 
-// Iterate through the files:
+// Set globals:
+$GLOBALS['page_width'] = 210 * 4;   // A4
+$GLOBALS['page_height'] = 297 * 4;  // A4
+
+// Layouts:
+
+
+// Iterate through the files and add them to pages:
+$pages = array();
 foreach($files as $file)
 {
     $info = getimagesize($file);
-    // echo $info[1] / $info[0] . "\n";
+//     echo $info[1] / $info[0] . "\n";
 }
 
 // Testing purposes:
-$svg = new Svg_Document(600, 400);
+$svg = new Svg_Document($GLOBALS['page_width'], $GLOBALS['page_height']);
 
-$rect = new Svg_Element('rect',
+/*$rect = new Svg_Element('rect',
     array(
         'rx' => 20,
         'ry' => 20,
@@ -41,7 +49,7 @@ $group->addElement($rect);
 
 $svg->addDefinition($group);
 
-$svg->addUse('group01', array('x' => 10, 'y' => 10));
+$svg->addUse('group01', array('x' => 10, 'y' => 10));*/
 
 $border = new Svg_Border();
 $svg->addElement($border);

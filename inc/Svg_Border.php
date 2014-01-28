@@ -33,8 +33,8 @@ class Svg_Border extends Svg_Group
         // Set the settings for the outer border:
         $outerBorderAttributes = $this->merge_settings(
             array(
-                'width' => '600',
-                'height' => '400',
+                'width' => $GLOBALS['page_width'],
+                'height' => $GLOBALS['page_height'],
                 'fill' => 'yellow',
                  'mask' => 'url(#border-mask)'
             ),
