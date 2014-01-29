@@ -66,7 +66,7 @@ $svg->addDefinition($group);
 $svg->addUse('group01', array('x' => 10, 'y' => 10));*/
 
 // Image test:
-$image = new Svg_Imagebox('./images/DSC00234.jpg', array('width' => 300, 'height' => 300, 'x' => 100, 'y' => 100));
+$image = new Svg_Imagebox('./images/test.jpg', array('width' => 300, 'height' => 300, 'x' => 100, 'y' => 100));
 $svg->addElement($image);
 
 $border = new Svg_Border();

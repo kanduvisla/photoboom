@@ -21,24 +21,30 @@ class Svg_Imagebox extends Svg_Group
     public function __construct($filename, $attributes)
     {
         $this->id = 'image-'.md5($filename);
-        parent::__construct($this->id);
-        // Get the image size:
 
         // Merge the settings:
         $attributes = array_merge(
             array(
-                'border-radius' => 20
+                'border-radius' => 20,
+                'x' => 0,
+                'y' => 0,
+                'width' => 300,
+                'height' => 300
             ),
             $attributes
+        );
+
+        parent::__construct($this->id,
+            array(
+                'transform' => 'translate(' . $attributes['x'] . ', ' . $attributes['y'].')'
+            )
         );
 
         // Create the clip path:
         $clipPathAttributes = $this->merge_settings(
             array(
-                'x' => 0,
-                'y' => 0,
-                'width' => 300,
-                'height' => 300,
+                'width' => $attributes['width'],
+                'height' => $attributes['height'],
                 'rx' => $attributes['border-radius'],
                 'ry' => $attributes['border-radius']
             ),
@@ -49,14 +55,28 @@ class Svg_Imagebox extends Svg_Group
         $this->sxml_append($clipPath->getSvgData(), $clipRect->getSvgData());
         $this->addElement($clipPath);
 
+        // Get the image size:
+        $info = getimagesize($filename);
+
+        // Crop it on it's longest side:
+        if($info[0] / $info[1] > $attributes['width'] / $attributes['height'])
+        {
+            // Height is leading
+            $newHeight = $attributes['height'];
+            $newWidth  = $info[0] * $attributes['height'] / $info[1];
+        } else {
+            // Width is leading
+            $newHeight = $info[1] * $attributes['width'] / $info[0];
+            $newWidth  = $attributes['width'];
+        }
+
         // Create the image:
-        $imageAttributes = $this->merge_settings(
-            array(
-                'x' => 0,
-                'y' => 0,
-                'clip-path' => 'url(#clip-' . $this->id . ')'
-            ),
-            $attributes
+        $imageAttributes = array(
+            'clip-path' => 'url(#clip-' . $this->id . ')',
+            'width' => ceil($newWidth),
+            'height' => ceil($newHeight),
+            'x' => round(($attributes['width'] - $newWidth) / 2),
+            'y' => round(($attributes['height'] - $newHeight) / 2)
         );
         $image = new Svg_Image($filename, $imageAttributes);
         $this->addElement($image);
