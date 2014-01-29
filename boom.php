@@ -22,6 +22,15 @@ printf("Found %d images\n", count($files));
 $GLOBALS['page_width'] = 210 * 4;   // A4
 $GLOBALS['page_height'] = 297 * 4;  // A4
 
+$GLOBALS['margin'] = 20;    // Margins around the page
+
+$GLOBALS['photo_random_seed'] = array(
+    1 => array(0, 0.1),
+    2 => array(0.1, 0.3),
+    3 => array(0.3, 0.8),
+    4 => array(0.8, 1)
+); // This is the chance of certain pages to appear.
+
 $GLOBALS['max_image_width'] = $GLOBALS['page_width'] * 1.5;
 $GLOBALS['max_image_height'] = $GLOBALS['page_height'] * 1.5;
 
@@ -39,11 +48,29 @@ $GLOBALS['landscape_sizes'] = array(
 
 // Iterate through the files and add them to pages:
 $pages = array();
-foreach($files as $file)
+$current = 0;
+while($current < count($files))
+{
+    $random = rand(0, 100) / 100;
+    $count  = 1;
+    foreach($GLOBALS['photo_random_seed'] as $amount => $seed)
+    {
+        if($random >= $seed[0] && $random < $seed[1])
+        {
+            $count = $amount;
+        }
+    }
+    if($current + $count > count($files)) { $count = count($files) - $current; }
+    $pages[] = $count;
+    $current += $count;
+    printf("Page %d will get %d photos. (rand=%s)\n", count($pages), $count, number_format($random, 2));
+}
+/*foreach($files as $file)
 {
     $info = getimagesize($file);
 //     echo $info[1] / $info[0] . "\n";
-}
+
+}*/
 
 // Testing purposes:
 $svg = new Svg_Document($GLOBALS['page_width'], $GLOBALS['page_height']);
