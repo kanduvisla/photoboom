@@ -13,6 +13,7 @@ require_once('inc/Svg_Document.php');
 require_once('inc/Svg_Group.php');
 require_once('inc/Svg_Image.php');
 require_once('inc/Svg_Imagebox.php');
+require_once('inc/Svg_Fancybox.php');
 require_once('inc/Svg_Border.php');
 
 $files = glob('images/*.jpg');
@@ -66,19 +67,27 @@ $svg->addDefinition($group);
 $svg->addUse('group01', array('x' => 10, 'y' => 10));*/
 
 // Image test:
-$image = new Svg_Imagebox('./images/test.jpg', array('width' => 200, 'height' => 200, 'x' => 100, 'y' => 100));
+$image = new Svg_Fancybox('./images/test.jpg', array('width' => 200, 'height' => 200, 'x' => 100, 'y' => 100, 'border-radius' => 20,
+    'rotation' => 10, 'stroke' => array(
+        array(
+            'width' => 3, 'dasharray' => '5, 5', 'color' => '#ff0000', 'linecap' => 'round', 'offset' => 5
+        ),
+        array(
+            'width' => 3, 'dasharray' => '5, 5', 'color' => '#00ff00', 'linecap' => 'round', 'offset' => -5
+        )
+    )));
 $svg->addElement($image);
 
-$image = new Svg_Imagebox('./images/test.jpg', array('width' => 300, 'height' => 200, 'x' => 350, 'y' => 100));
+$image = new Svg_Fancybox('./images/test.jpg', array('width' => 300, 'height' => 200, 'x' => 350, 'y' => 100));
 $svg->addElement($image);
 
-$image = new Svg_Imagebox('./images/test.jpg', array('width' => 200, 'height' => 300, 'x' => 100, 'y' => 350));
+$image = new Svg_Fancybox('./images/test.jpg', array('width' => 200, 'height' => 300, 'x' => 100, 'y' => 350));
 $svg->addElement($image);
 
-$image = new Svg_Imagebox('./images/test.jpg', array('width' => 300, 'height' => 300, 'x' => 350, 'y' => 350));
+$image = new Svg_Fancybox('./images/test.jpg', array('width' => 300, 'height' => 300, 'x' => 350, 'y' => 350));
 $svg->addElement($image);
 
-$image = new Svg_Imagebox('./images/test.jpg', array('width' => 550, 'height' => 200, 'x' => 100, 'y' => 700));
+$image = new Svg_Fancybox('./images/test.jpg', array('width' => 550, 'height' => 200, 'x' => 100, 'y' => 700));
 $svg->addElement($image);
 
 $border = new Svg_Border();

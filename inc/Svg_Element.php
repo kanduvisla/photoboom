@@ -3,6 +3,7 @@
 class Svg_Element
 {
     protected $svg;
+    protected $attributes;
 
     /**
      * Create a new SVG Element

@@ -18,14 +18,14 @@ class Svg_Imagebox extends Svg_Group
      * @param string $filename
      * @param array $attributes
      */
-    public function __construct($filename, $attributes)
+    public function __construct($filename, $attributes = array())
     {
         $this->id = 'image-'.md5($filename).'-'.rand(10000, 99999);
 
         // Merge the settings:
         $attributes = array_merge(
             array(
-                'border-radius' => 20,
+                'border-radius' => 0,
                 'x' => 0,
                 'y' => 0,
                 'width' => 300,
@@ -62,8 +62,8 @@ class Svg_Imagebox extends Svg_Group
                 'height' => $attributes['height'],
                 'rx' => $attributes['border-radius'],
                 'ry' => $attributes['border-radius'],
-//            'x' => round(($attributes['width'] - $newWidth) / 2),
-//            'y' => round(($attributes['height'] - $newHeight) / 2)
+                'transform' => 'translate(' . -round(($attributes['width'] - $newWidth) / 2) .
+                    ', ' . -round(($attributes['height'] - $newHeight) / 2) . ')'
             ),
             $attributes
         );
@@ -77,10 +77,8 @@ class Svg_Imagebox extends Svg_Group
             'clip-path' => 'url(#clip-' . $this->id . ')',
             'width' => ceil($newWidth),
             'height' => ceil($newHeight),
-            'x' => round(($attributes['width'] - $newWidth) / 2),
-            'y' => round(($attributes['height'] - $newHeight) / 2)
-//            'transform' => 'translate(' . round(($attributes['width'] - $newWidth) / 2) .
-//                ', ' . round(($attributes['height'] - $newHeight) / 2) . ')'
+            'transform' => 'translate(' . round(($attributes['width'] - $newWidth) / 2) .
+                ', ' . round(($attributes['height'] - $newHeight) / 2) . ')'
         );
         $image = new Svg_Image($filename, $imageAttributes);
         $this->addElement($image);
