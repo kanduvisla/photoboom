@@ -14,6 +14,7 @@ require_once('inc/Svg_Group.php');
 require_once('inc/Svg_Image.php');
 require_once('inc/Svg_Imagebox.php');
 require_once('inc/Svg_Fancybox.php');
+require_once('inc/Svg_Textbox.php');
 require_once('inc/Svg_Border.php');
 
 $files = glob('images/*.jpg');
@@ -118,6 +119,22 @@ $svg->addElement($image);
 $image = new Svg_Fancybox('./images/test.jpg', array('width' => 550, 'height' => 200, 'x' => 100, 'y' => 700));
 $svg->addElement($image);
 
+// Add text:
+$textbox = new Svg_Textbox('Hello world' , array('x' => 100, 'y' => 100, 'border-radius' => 10, 'rotation' => 5,
+    'stroke' => array(
+            array(
+                'width' => 3, 'dasharray' => '5, 5', 'color' => '#ff0000', 'linecap' => 'round', 'offset' => 5
+            ),
+            array(
+                'width' => 3, 'dasharray' => '5, 5', 'color' => '#00ff00', 'linecap' => 'round', 'offset' => -5
+            )
+        )
+    )
+);
+
+$svg->addElement($textbox);
+
+// Add border:
 $border = new Svg_Border(array('fill' => '#0000ff', 'border-radius' => 10, 'size' => 40));
 $svg->addElement($border);
 

@@ -16,28 +16,14 @@ class Svg_Fancybox extends Svg_Imagebox
 {
     public function __construct($filename, $attributes = array())
     {
-        // Pick out the stroke:
-        if(isset($attributes['stroke'])) {
-            $strokeArr = $attributes['stroke'];
-            unset($attributes['stroke']);
-        } else {
-            $strokeArr = false;
-        }
-
-        // Pick out the rotation
-        if(isset($attributes['rotation'])) {
-            $rotation = $attributes['rotation'];
-            unset($attributes['rotation']);
-        } else {
-            $rotation = false;
-        }
-
         parent::__construct($filename, $attributes);
 
+        $this->mergeAttributes($attributes);
+
         // Rotation:
-        if($rotation !== false)
+        if(isset($this->attributes['rotation']))
         {
-            $rotateStr = 'rotate(' . $rotation .' ' . round($this->attributes['width'] / 2) .
+            $rotateStr = 'rotate(' . $this->attributes['rotation'] .' ' . round($this->attributes['width'] / 2) .
                 ' ' . round($this->attributes['height'] / 2) . ')';
             $svgAttributes = $this->svg->attributes();
             if(isset($svgAttributes['transform']))
@@ -49,9 +35,9 @@ class Svg_Fancybox extends Svg_Imagebox
         }
 
         // Strokes:
-        if($strokeArr !== false && is_array($strokeArr))
+        if(isset($this->attributes['stroke']) !== false && is_array($this->attributes['stroke']))
         {
-            foreach($strokeArr as $stroke)
+            foreach($this->attributes['stroke'] as $stroke)
             {
                 if(is_array($stroke))
                 {
