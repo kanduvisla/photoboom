@@ -81,8 +81,11 @@ $svg = new Svg_Document($GLOBALS['page_width'], $GLOBALS['page_height']);
 // Set the dropshadow:
 $svg->setDropshadow();
 
-// Import SVG as definition:
-$svg->importSvgAsDefinition('./clipart/tack1.svg', 'tack1');
+// Import SVG's as definitions:
+foreach(glob('./clipart/*.svg') as $svgFile)
+{
+    $svg->importSvgAsDefinition($svgFile, str_replace('.svg', '', basename($svgFile)));
+}
 
 
 /*$rect = new Svg_Element('rect',
