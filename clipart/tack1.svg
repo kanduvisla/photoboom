@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="47.217px" height="47.646px" viewBox="0 0 47.217 47.646" enable-background="new 0 0 47.217 47.646" xml:space="preserve">
+<g>
+	
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="30.2761" y1="814.0288" x2="-65.9271" y2="731.2131" gradientTransform="matrix(1 0 0 -1 0.1401 840.9443)">
+		<stop  offset="0.0055" style="stop-color:#000000;stop-opacity:0"/>
+		<stop  offset="1" style="stop-color:#000000"/>
+	</linearGradient>
+	<ellipse fill="url(#SVGID_1_)" cx="27.83" cy="29.142" rx="19.387" ry="17.269"/>
+	
+		<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="20.8528" y1="795.2544" x2="16.7551" y2="795.2544" gradientTransform="matrix(1 0 0 -1 0.1401 840.9443)">
+		<stop  offset="0" style="stop-color:#CCCCCC"/>
+		<stop  offset="1" style="stop-color:#000000"/>
+	</linearGradient>
+	<path fill="url(#SVGID_2_)" d="M20.685,47.266v-3.528H18.09v3.528C18.09,47.266,19.326,48.119,20.685,47.266z"/>
+	
+		<radialGradient id="SVGID_3_" cx="29.5603" cy="797.8394" r="44.1349" gradientTransform="matrix(1 0 0 -1 0.1401 840.9443)" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#FFFFFF"/>
+		<stop  offset="0.2623" style="stop-color:#20ACE2"/>
+		<stop  offset="0.7857" style="stop-color:#26295A"/>
+	</radialGradient>
+	<ellipse fill="url(#SVGID_3_)" cx="19.387" cy="29.078" rx="19.387" ry="17.269"/>
+	
+		<linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="24.5491" y1="813.5483" x2="13.1673" y2="813.5483" gradientTransform="matrix(1 0 0 -1 0.1401 840.9443)">
+		<stop  offset="0" style="stop-color:#20ACE2"/>
+		<stop  offset="1" style="stop-color:#26295A"/>
+	</linearGradient>
+	<path fill="url(#SVGID_4_)" d="M11.687,21.534l-0.429,4.485c0,3.999,3.639,7.241,8.128,7.241c4.49,0,8.13-3.242,8.13-7.241
+		l-0.43-4.485H11.687z"/>
+	
+		<radialGradient id="SVGID_5_" cx="19.2468" cy="826.5308" r="13.7279" gradientTransform="matrix(1 0 0 -1 0.1401 840.9443)" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#20ACE2"/>
+		<stop  offset="1" style="stop-color:#26295A"/>
+	</radialGradient>
+	<ellipse fill="url(#SVGID_5_)" cx="19.387" cy="14.413" rx="14.496" ry="12.914"/>
+	
+		<radialGradient id="SVGID_6_" cx="37.0652" cy="808.1519" r="55.3888" gradientTransform="matrix(1 0 0 -1 0.1401 840.9443)" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#C4DCA5"/>
+		<stop  offset="0.2623" style="stop-color:#20ACE2"/>
+		<stop  offset="0.7857" style="stop-color:#26295A"/>
+	</radialGradient>
+	<ellipse fill="url(#SVGID_6_)" cx="19.387" cy="12.914" rx="14.496" ry="12.914"/>
+</g>
+</svg>

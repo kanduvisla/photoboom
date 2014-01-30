@@ -12,13 +12,22 @@ class Svg_Image extends Svg_Element
     {
         $info = getimagesize($filename);
 
-        // Merge attributes:
-        $this->mergeAttributes(
-            array(
+        if($info != false)
+        {
+            $arr = array(
                 'xlink:xlink:href' => $filename,
                 'width' => $info[0],
                 'height' => $info[1]
-            ),
+            );
+        } else {
+            $arr = array(
+                'xlink:xlink:href' => $filename,
+            );
+        }
+
+        // Merge attributes:
+        $this->mergeAttributes(
+            $arr,
             $attributes
         );
 

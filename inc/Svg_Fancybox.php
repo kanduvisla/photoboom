@@ -34,7 +34,29 @@ class Svg_Fancybox extends Svg_Imagebox
             }
         }
 
+        // Dropshadow:
+
+
         // Strokes:
         $this->stroke();
+
+        // Check for extra's:
+        if(isset($this->attributes['extra']))
+        {
+            switch($this->attributes['extra'])
+            {
+                case 'tack' :
+                    $tack = new Svg_Image('./clipart/tack1.svg',
+                        array(
+                            'width' => 30,
+                            'height' => 30,
+                            'x' => ($this->attributes['width'] / 2) - 15,
+                            'y' => -15
+                        )
+                    );
+                    $this->addElement($tack);
+                    break;
+            }
+        }
     }
 }

@@ -113,7 +113,8 @@ $svg->addElement($image);
 $image = new Svg_Fancybox('./images/test.jpg', array('width' => 200, 'height' => 300, 'x' => 100, 'y' => 350));
 $svg->addElement($image);
 
-$image = new Svg_Fancybox('./images/test.jpg', array('width' => 300, 'height' => 300, 'x' => 350, 'y' => 350));
+$image = new Svg_Fancybox('./images/test.jpg', array('width' => 300, 'height' => 300, 'x' => 350, 'y' => 350,
+    'extra' => 'tack', 'rotation' => -5, 'dropshadow' => 1));
 $svg->addElement($image);
 
 $image = new Svg_Fancybox('./images/test.jpg', array('width' => 550, 'height' => 200, 'x' => 100, 'y' => 700));
