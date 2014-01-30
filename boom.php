@@ -78,6 +78,9 @@ while($current < count($files))
 // Testing purposes:
 $svg = new Svg_Document($GLOBALS['page_width'], $GLOBALS['page_height']);
 
+// Set the dropshadow:
+$svg->setDropshadow();
+
 /*$rect = new Svg_Element('rect',
     array(
         'rx' => 20,
@@ -121,7 +124,7 @@ $image = new Svg_Fancybox('./images/test.jpg', array('width' => 550, 'height' =>
 $svg->addElement($image);
 
 // Add text:
-$textbox = new Svg_Textbox('Hello world' , array('x' => 100, 'y' => 100, 'border-radius' => 10, 'rotation' => 5,
+$textbox = new Svg_Textbox('Hello world' , array('x' => 500, 'y' => 850, 'border-radius' => 10, 'rotation' => 5,
     'stroke' => array(
             array(
                 'width' => 3, 'dasharray' => '5, 5', 'color' => '#ff0000', 'linecap' => 'round', 'offset' => 5

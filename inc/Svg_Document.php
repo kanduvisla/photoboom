@@ -81,6 +81,58 @@ class Svg_Document extends Svg_Element
     }
 
     /**
+     * Set the default drop shadow
+     *
+     * @param array $parameters
+     */
+    public function setDropshadow($parameters = array())
+    {
+        // Set the filter:
+        $filter = new Svg_Element('filter',
+            array(
+                'id' => 'dropshadow',
+                'x' => 0,
+                'y' => 0,
+                'width' => '200%',
+                'height' => '200%'
+            )
+        );
+
+        // Set the offset:
+        $feOffset = new Svg_Element('feOffset',
+            array(
+                'result' => 'offOut',
+                'in' => 'SourceAlpha',
+                'dx' => 2,
+                'dy' => 2
+            )
+        );
+
+        // Set the blur:
+        $feGaussianBlur = new Svg_Element('feGaussianBlur',
+            array(
+                'result' => 'blurOut',
+                'in' => 'offOut',
+                'stdDeviation' => 3
+            )
+        );
+
+        // Set the blend:
+        $feBlend = new Svg_Element('feBlend',
+            array(
+                'in' => 'SourceGraphic',
+                'in2' => 'blurOut',
+                'mode' => 'normal'
+            )
+        );
+
+        $filter->addElement($feOffset);
+        $filter->addElement($feGaussianBlur);
+        $filter->addElement($feBlend);
+        $this->addDefinition($filter);
+    }
+
+    /**
      * Add a 'use'
      *
      * @param string $id

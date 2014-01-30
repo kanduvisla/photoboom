@@ -35,7 +35,10 @@ class Svg_Fancybox extends Svg_Imagebox
         }
 
         // Dropshadow:
-
+        if(isset($this->attributes['dropshadow']) && $this->attributes['dropshadow'] == 1)
+        {
+            $this->svg['filter'] = 'url(#dropshadow)';
+        }
 
         // Strokes:
         $this->stroke();
@@ -50,8 +53,9 @@ class Svg_Fancybox extends Svg_Imagebox
                         array(
                             'width' => 30,
                             'height' => 30,
-                            'x' => ($this->attributes['width'] / 2) - 15,
-                            'y' => -15
+//                            'x' => ($this->attributes['width'] / 2) - 15,
+//                            'y' => -15
+                            'transform' => 'translate(' . (($this->attributes['width'] / 2) - 15) . ', -15)'
                         )
                     );
                     $this->addElement($tack);
