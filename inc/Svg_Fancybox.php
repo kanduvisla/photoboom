@@ -16,16 +16,29 @@ class Svg_Fancybox extends Svg_Imagebox
 {
     public function __construct($filename, $attributes = array())
     {
+        // Pick out the stroke:
+        if(isset($attributes['stroke'])) {
+            $strokeArr = $attributes['stroke'];
+            unset($attributes['stroke']);
+        } else {
+            $strokeArr = false;
+        }
+
+        // Pick out the rotation
+        if(isset($attributes['rotation'])) {
+            $rotation = $attributes['rotation'];
+            unset($attributes['rotation']);
+        } else {
+            $rotation = false;
+        }
+
         parent::__construct($filename, $attributes);
 
-        // Temp solution:
-        if(!isset($attributes['border-radius'])) { $attributes['border-radius'] = 0; }
-
         // Rotation:
-        if(isset($attributes['rotation']))
+        if($rotation !== false)
         {
-            $rotateStr = 'rotate(' . $attributes['rotation'] .' ' . round($attributes['width'] / 2) .
-                ' ' . round($attributes['height'] / 2) . ')';
+            $rotateStr = 'rotate(' . $rotation .' ' . round($this->attributes['width'] / 2) .
+                ' ' . round($this->attributes['height'] / 2) . ')';
             $svgAttributes = $this->svg->attributes();
             if(isset($svgAttributes['transform']))
             {
@@ -36,19 +49,19 @@ class Svg_Fancybox extends Svg_Imagebox
         }
 
         // Strokes:
-        if(isset($attributes['stroke']) && is_array($attributes['stroke']))
+        if($strokeArr !== false && is_array($strokeArr))
         {
-            foreach($attributes['stroke'] as $stroke)
+            foreach($strokeArr as $stroke)
             {
                 if(is_array($stroke))
                 {
                     if(!isset($stroke['offset'])) { $stroke['offset'] = 0; }
                     $strokeAttributes = array(
-                        'width'     => $attributes['width'] + ($stroke['offset'] * 2),
-                        'height'    => $attributes['height'] + ($stroke['offset'] * 2),
+                        'width'     => $this->attributes['width'] + ($stroke['offset'] * 2),
+                        'height'    => $this->attributes['height'] + ($stroke['offset'] * 2),
                         'fill'      => 'none',
-                        'rx'        => $attributes['border-radius'],
-                        'ry'        => $attributes['border-radius'],
+                        'rx'        => $this->attributes['border-radius'],
+                        'ry'        => $this->attributes['border-radius'],
                         'x'         => -$stroke['offset'],
                         'y'         => -$stroke['offset']
                     );

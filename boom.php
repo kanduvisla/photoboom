@@ -66,6 +66,7 @@ while($current < count($files))
     $current += $count;
     printf("Page %d will get %d photos. (rand=%s)\n", count($pages), $count, number_format($random, 2));
 }
+
 /*foreach($files as $file)
 {
     $info = getimagesize($file);
@@ -117,7 +118,7 @@ $svg->addElement($image);
 $image = new Svg_Fancybox('./images/test.jpg', array('width' => 550, 'height' => 200, 'x' => 100, 'y' => 700));
 $svg->addElement($image);
 
-$border = new Svg_Border();
+$border = new Svg_Border(array('fill' => '#0000ff', 'border-radius' => 10, 'size' => 40));
 $svg->addElement($border);
 
 $svg->parse('./test.svg');

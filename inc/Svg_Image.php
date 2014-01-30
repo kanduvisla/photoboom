@@ -12,19 +12,17 @@ class Svg_Image extends Svg_Element
     {
         $info = getimagesize($filename);
 
-        // Construct the element:
-        $attributes = array_merge(
+        // Merge attributes:
+        $this->mergeAttributes(
             array(
                 'xlink:xlink:href' => $filename,
-                'width' => $info[0].'px',
-                'height' => $info[1].'px'
+                'width' => $info[0],
+                'height' => $info[1]
             ),
             $attributes
         );
-        // Append suffix if needed:
-        if(is_int($attributes['width'])) { $attributes['width'] .= 'px'; }
-        if(is_int($attributes['height'])) { $attributes['height'] .= 'px'; }
 
-        parent::__construct('image', $attributes);
+        // Construct the element:
+        parent::__construct('image');
     }
 }

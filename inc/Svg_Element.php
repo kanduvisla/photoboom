@@ -2,8 +2,8 @@
 
 class Svg_Element
 {
-    protected $svg;
-    protected $attributes;
+    protected $svg;         // SimpleXMLElement that acts for this SVG Element
+    protected $attributes;  // Array with default attributes
 
     /**
      * Create a new SVG Element
@@ -14,7 +14,8 @@ class Svg_Element
     public function __construct($type, $attributes = array())
     {
         $this->svg = new SimpleXMLElement('<'.$type.' />');
-        foreach($attributes as $key => $value)
+        $this->mergeAttributes($attributes);
+        foreach($this->attributes as $key => $value)
         {
             $this->svg->addAttribute($key, $value);
         }
@@ -59,14 +60,34 @@ class Svg_Element
      * @param array $userSettings
      * @return array
      */
-    protected function merge_settings($defaultSettings, $userSettings)
+//    protected function merge_settings($defaultSettings, $userSettings)
+//    {
+//        foreach($defaultSettings as $key => $value)
+//        {
+//            if(isset($userSettings[$key])) {
+//                $defaultSettings[$key] = $userSettings[$key];
+//            }
+//        }
+//        return $defaultSettings;
+//    }
+
+    /**
+     * Merge the attributes
+     *
+     * @param array ...
+     */
+    protected function mergeAttributes()
     {
-        foreach($defaultSettings as $key => $value)
+        if(!is_array($this->attributes)) { $this->attributes = array(); }
+        $args = func_get_args();
+        for($i = 0; $i < func_num_args(); $i++)
         {
-            if(isset($userSettings[$key])) {
-                $defaultSettings[$key] = $userSettings[$key];
+            if(is_array($args[$i])) {
+                foreach($args[$i] as $key => $value)
+                {
+                    $this->attributes[$key] = $value;
+                }
             }
         }
-        return $defaultSettings;
     }
 }

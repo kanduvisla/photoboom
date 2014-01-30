@@ -10,13 +10,7 @@ class Svg_Group extends Svg_Element
      */
     public function __construct($id, $attributes = array())
     {
-        parent::__construct('g',
-            array_merge(
-                array(
-                    'id' => $id
-                ),
-                $attributes
-            )
-        );
+        $this->mergeAttributes(array('id' => $id), $attributes);
+        parent::__construct('g');
     }
 }
