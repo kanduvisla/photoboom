@@ -55,32 +55,7 @@ class Svg_Textbox extends Svg_Group
         $this->addElement($labelRect);
 
         // Stroke:
-        if(isset($this->attributes['stroke']) !== false && is_array($this->attributes['stroke']))
-        {
-            foreach($this->attributes['stroke'] as $stroke)
-            {
-                if(is_array($stroke))
-                {
-                    if(!isset($stroke['offset'])) { $stroke['offset'] = 0; }
-                    $strokeAttributes = array(
-                        'width'     => $this->attributes['width'] + ($stroke['offset'] * 2),
-                        'height'    => $this->attributes['height'] + ($stroke['offset'] * 2),
-                        'fill'      => 'none',
-                        'rx'        => $this->attributes['border-radius'],
-                        'ry'        => $this->attributes['border-radius'],
-                        'x'         => -$stroke['offset'],
-                        'y'         => -$stroke['offset']
-                    );
-                    if(isset($stroke['color']))     { $strokeAttributes['stroke'] = $stroke['color']; }
-                    if(isset($stroke['width']))     { $strokeAttributes['stroke-width'] = $stroke['width']; }
-                    if(isset($stroke['dasharray'])) { $strokeAttributes['stroke-dasharray'] = $stroke['dasharray']; }
-                    if(isset($stroke['linecap']))   { $strokeAttributes['stroke-linecap'] = $stroke['linecap']; }
-
-                    $strokeRect = new Svg_Element('rect', $strokeAttributes);
-                    $this->addElement($strokeRect);
-                }
-            }
-        }
+        $this->stroke();
 
         // Create the text:
         $textElement = new Svg_Element('text',
