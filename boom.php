@@ -81,6 +81,10 @@ $svg = new Svg_Document($GLOBALS['page_width'], $GLOBALS['page_height']);
 // Set the dropshadow:
 $svg->setDropshadow();
 
+// Import SVG as definition:
+$svg->importSvgAsDefinition('./clipart/tack1.svg', 'tack1');
+
+
 /*$rect = new Svg_Element('rect',
     array(
         'rx' => 20,
@@ -117,7 +121,7 @@ $image = new Svg_Fancybox('./images/test.jpg', array('width' => 200, 'height' =>
 $svg->addElement($image);
 
 $image = new Svg_Fancybox('./images/test.jpg', array('width' => 300, 'height' => 300, 'x' => 350, 'y' => 350,
-    'extra' => 'tack', 'rotation' => -5, 'dropshadow' => 1));
+    'extra' => 'tack', 'rotation' => -5/*, 'dropshadow' => 1*/));
 $svg->addElement($image);
 
 $image = new Svg_Fancybox('./images/test.jpg', array('width' => 550, 'height' => 200, 'x' => 100, 'y' => 700));

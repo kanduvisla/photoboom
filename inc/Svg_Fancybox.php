@@ -49,6 +49,12 @@ class Svg_Fancybox extends Svg_Imagebox
             switch($this->attributes['extra'])
             {
                 case 'tack' :
+                    $tack = new SimpleXMLElement('<use />');
+                    $tack->addAttribute('xlink:xlink:href', '#tack1');
+                    $tack->addAttribute('transform', 'translate(' . (($this->attributes['width'] / 2) - 15) . ', -15)');
+                    $this->sxml_append($this->getSvgData(), $tack);
+
+/*
                     $tack = new Svg_Image('./clipart/tack1.svg',
                         array(
                             'width' => 30,
@@ -58,7 +64,7 @@ class Svg_Fancybox extends Svg_Imagebox
                             'transform' => 'translate(' . (($this->attributes['width'] / 2) - 15) . ', -15)'
                         )
                     );
-                    $this->addElement($tack);
+                    $this->addElement($tack);*/
                     break;
             }
         }

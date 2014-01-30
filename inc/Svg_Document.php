@@ -133,6 +133,21 @@ class Svg_Document extends Svg_Element
     }
 
     /**
+     * Import an SVG file as a definition
+     *
+     * @param $filename
+     * @param $id
+     */
+    public function importSvgAsDefinition($filename, $id)
+    {
+        $svgXML = simplexml_load_file($filename);
+        $group  = $svgXML->g;
+        $group['id'] = $id;
+        $g = new SimpleXMLElement($group->asXML());
+        $this->sxml_append($this->defs, $g);
+    }
+
+    /**
      * Add a 'use'
      *
      * @param string $id
