@@ -84,10 +84,76 @@ class Svg_Pattern extends Svg_Group
                 }
                 break;
             case 'lines45' :
-
+                $i = 0;
+                $c = count($this->attributes['colors']);
+                // $this->attributes['offset'] *= 1; //($this->attributes['size'] / 5); // because of the 45 degree angle
+                $this->attributes['offset'] *= 1.5;
+                $this->attributes['offset'] += $this->attributes['size'] / 2.5;
+                if($this->attributes['yAxis'])
+                {
+                    for($y=0; $y < $this->attributes['height'] + $this->attributes['width']; $y += ($this->attributes['size'] + $this->attributes['offset']))
+                    {
+                        // Y-Axis
+                        $line = new Svg_Element('line',
+                            array(
+                                'x1' => 0,
+                                'y1' => $y,
+                                'x2' => $y,
+                                'y2' => 0,
+                                'stroke-width' => $this->attributes['size'],
+                                'stroke' => $this->attributes['colors'][$i / 1 % $c],
+                                'stroke-opacity' => $this->attributes['opacity']
+                            )
+                        );
+                        $this->addElement($line);
+                        $i ++;
+                    }
+                }
+                if($this->attributes['xAxis'])
+                {
+                    for($y=$this->attributes['height']; $y > -$this->attributes['width']; $y -= ($this->attributes['size'] + $this->attributes['offset']))
+                    {
+                        // X-Axis
+                        $line = new Svg_Element('line',
+                            array(
+                                'x1' => 0,
+                                'y1' => $y,
+                                'x2' => ($this->attributes['height'] - $y),
+                                'y2' => $this->attributes['height'],
+                                'stroke-width' => $this->attributes['size'],
+                                'stroke' => $this->attributes['colors'][$i / 1 % $c],
+                                'stroke-opacity' => $this->attributes['opacity']
+                            )
+                        );
+                        $this->addElement($line);
+                        $i ++;
+                    }
+                }
                 break;
             case 'dots' :
+                $i = 0;
+                $j = 0;
+                $c = count($this->attributes['colors']);
+                for($y = 0; $y < $this->attributes['height']; $y+= (($this->attributes['size'] + $this->attributes['offset']) * 0.85 ))
+                {
+                    $j++;
+                    for($x = 0; $x < $this->attributes['width'] + ($this->attributes['size'] + $this->attributes['offset']); $x+= ($this->attributes['size'] + $this->attributes['offset']))
+                    {
+                        $offset = ($this->attributes['offset'] + $this->attributes['size']) / 2;
+                        $circle = new Svg_Element('circle',
+                            array(
+                                'cx' => $x - (($j%2) * $offset),
+                                'cy' => $y,
+                                'stroke' => 'none',
+                                'fill' => $this->attributes['colors'][$i / 1 % $c],
+                                'r' => $this->attributes['size'] / 2
+                            )
+                        );
 
+                        $this->addElement($circle);
+                        $i ++;
+                    }
+                }
                 break;
         }
     }

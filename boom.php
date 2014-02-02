@@ -109,9 +109,12 @@ $svg->addUse('group01', array('x' => 10, 'y' => 10));*/
 // Pattern test:
 $pattern = new Svg_Pattern(
     array(
+        'type' => 'dots',
         'colors' => array('red', 'blue'),
         'opacity' => .25,
-        'fill' => 'white'
+        'fill' => 'white',
+        'offset' => 25,
+        'size' => 25
     )
 );
 
