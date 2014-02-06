@@ -63,10 +63,20 @@ while($current < count($files))
             $count = $amount;
         }
     }
-    if($current + $count > count($files)) { $count = count($files) - $current; }
+    if($current + $count > count($files)) {
+        // Last page
+        $count = count($files) - $current;
+        $spread = false;
+    } else {
+        $spread = $current != 0;
+    }
     $pages[] = $count;
     $current += $count;
     printf("Page %d will get %d photos. (rand=%s)\n", count($pages), $count, number_format($random, 2));
+
+    // Create the page:
+    $width = $spread ? $GLOBALS['page_width'] * 2 : $GLOBALS['page_width'];
+    $svg = new Svg_Document($GLOBALS['page_width'], $GLOBALS['page_height']);
 }
 
 /*foreach($files as $file)
@@ -88,6 +98,22 @@ foreach(glob('./clipart/*.svg') as $svgFile)
     $svg->importSvgAsDefinition($svgFile, str_replace('.svg', '', basename($svgFile)));
 }
 
+// Calculate layouts:
+// Layouts are done by drawing imaginary lines:
+/**
+ * @param $svg      Svg_Document
+ * @param $options  array
+ */
+function generateLayout($svg, $options)
+{
+
+}
+
+generateLayout($svg,
+    array(
+
+    )
+);
 
 /*$rect = new Svg_Element('rect',
     array(
@@ -107,6 +133,7 @@ $svg->addDefinition($group);
 $svg->addUse('group01', array('x' => 10, 'y' => 10));*/
 
 // Pattern test:
+/*
 $pattern = new Svg_Pattern(
     array(
         'type' => 'dots',
@@ -139,7 +166,7 @@ $image = new Svg_Fancybox('./images/test.jpg', array('width' => 200, 'height' =>
 $svg->addElement($image);
 
 $image = new Svg_Fancybox('./images/test.jpg', array('width' => 300, 'height' => 300, 'x' => 350, 'y' => 350,
-    'extra' => 'tack', 'rotation' => -5/*, 'dropshadow' => 1*/));
+    'extra' => 'tack', 'rotation' => -5/*, 'dropshadow' => 1*//*));
 $svg->addElement($image);
 
 $image = new Svg_Fancybox('./images/test.jpg', array('width' => 550, 'height' => 200, 'x' => 100, 'y' => 700));
@@ -165,3 +192,4 @@ $border = new Svg_Border(array('fill' => '#0000ff', 'border-radius' => 10, 'size
 $svg->addElement($border);
 
 $svg->parse('./test.svg');
+*/

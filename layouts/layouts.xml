@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+    <layouts portrait="0" landscape="1">
+        <layout>
+            <photo />
+            <seph top="60%" />
+            <text width="50%" height="10%" />
+        </layout>
+    </layouts>
+    <layouts portrait="0" landscape="2">
+        <layout>
+            <photo />
+            <seph top="40%" />
+            <photo />
+            <seph top="80%" />
+            <text width="50%" height="10%" />
+        </layout>
+    </layouts>
+    <layouts portrait="0" landscape="3">
+        <layout>
+            <photo />
+            <seph top="33%" />
+            <photo />
+            <seph top="66%" />
+            <photo />
+        </layout>
+        <layout>
+            <photo />
+            <sepv left="70%" />
+            <text />
+            <seph top="33%" />
+            <text />
+            <sepv left="30%" />
+            <photo />
+            <seph top="66%" />
+            <photo />
+            <sepv left="70%" />
+            <text />
+        </layout>
+        <layout>
+            <text />
+            <sepv left="30%" />
+            <photo />
+            <seph top="33%" />
+            <photo />
+            <sepv left="70%" />
+            <text />
+            <seph top="66%" />
+            <text />
+            <sepv left="30%" />
+            <photo />
+        </layout>
+    </layouts>
+</data>
