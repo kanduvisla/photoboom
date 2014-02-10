@@ -25,7 +25,7 @@ printf("Found %d images\n", count($files));
 $GLOBALS['page_width'] = 210 * 4;   // A4
 $GLOBALS['page_height'] = 297 * 4;  // A4
 
-$GLOBALS['margin'] = 20;    // Margins around the page
+$GLOBALS['margin'] = 80;    // Margins around the page
 
 $GLOBALS['photo_random_seed'] = array(
     1 => array(0, 0.1),
@@ -38,12 +38,7 @@ $GLOBALS['max_image_width'] = $GLOBALS['page_width'] * 1.5;
 $GLOBALS['max_image_height'] = $GLOBALS['page_height'] * 1.5;
 
 // Set image ratios:
-$GLOBALS['portrait_sizes'] = array(
-    1/1, 2/3
-);
-$GLOBALS['landscape_sizes'] = array(
-    1/1, 3/2
-);
+$GLOBALS['ratio']  = 3/2;
 
 // Colors:
 $GLOBALS['colors'] = array(
@@ -96,12 +91,64 @@ while($current < count($files))
         $svg = new Svg_Document($width, $GLOBALS['page_height']);
     }
 
+    // Create a background:
+    $types = array('dots', 'lines', 'lines45');
+    $selectedType = $types[rand(0, 2)];
+    switch($selectedType) {
+        case 'dots' :
+            $fill = randomColor();
+            $colorsArr = array('white');
+            $opacity = rand(0, 1) == 1 ? 1 : 0.25;
+            break;
+        default :
+            $fill = 'white';
+            $colorsArr = rand(0, 1) == 1 ? array(randomColor()) : array(randomColor(), randomColor());
+            $opacity = 0.25;
+            break;
+    }
+    $pattern = new Svg_Pattern(
+        array(
+            'type' => $selectedType,
+            'colors' => $colorsArr,
+            'opacity' => $opacity,
+            'fill' => $fill,
+            'offset' => 25,
+            'size' => 25,
+            'width' => $width
+        )
+    );
+
+    $svg->addElement($pattern);
+
     // Add the photo's:
+    $leftX = (count($pages) % 2 == 1 && $spread) ? $GLOBALS['page_width'] : 0;
+    $centerX = $leftX + $GLOBALS['page_width'] / 2;
+    $centerY = $GLOBALS['page_height'] / 2;
     switch($count)
     {
         case 1:
         {
-
+            // Center picture:
+            $file = $files[$current - 1];
+            $info = getimagesize($file);
+            if($info[0] / $info[1] > 1) {
+                // Landscape
+                $maxWidth  = $GLOBALS['page_width'] - ($GLOBALS['margin'] * 2);
+                $maxHeight = $maxWidth / $GLOBALS['ratio'];
+            } else {
+                // Portrait
+                $maxHeight = $GLOBALS['page_height'] - ($GLOBALS['margin'] * 2);
+                $maxWidth  = $maxHeight / $GLOBALS['ratio'];
+            }
+            $photo = new Svg_Fancybox($file,
+                array(
+                    'width' => $maxWidth,
+                    'height' => $maxHeight,
+                    'x' => $centerX - ($maxWidth / 2),
+                    'y' => $centerY - ($maxHeight / 2)
+                )
+            );
+            $svg->addElement($photo);
             break;
         }
         case 2:

@@ -146,6 +146,7 @@ class Svg_Pattern extends Svg_Group
                                 'cy' => $y,
                                 'stroke' => 'none',
                                 'fill' => $this->attributes['colors'][$i / 1 % $c],
+                                'fill-opacity' => $this->attributes['opacity'],
                                 'r' => $this->attributes['size'] / 2
                             )
                         );
