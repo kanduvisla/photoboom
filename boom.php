@@ -45,9 +45,22 @@ $GLOBALS['landscape_sizes'] = array(
     1/1, 3/2
 );
 
+// Colors:
+$GLOBALS['colors'] = array(
+    'F31976',
+    '333333',
+    '06BDB1',
+    'F5C229',
+    'F1702B'
+);
+
 // Layouts:
 
-
+// Functions:
+function randomColor()
+{
+    return '#' . $GLOBALS['colors'][rand(0, count($GLOBALS['colors'])-1)];
+}
 
 // Iterate through the files and add them to pages:
 $pages = array();
@@ -67,17 +80,77 @@ while($current < count($files))
         // Last page
         $count = count($files) - $current;
         $spread = false;
+        $lastpage = true;
     } else {
         $spread = $current != 0;
+        $lastpage = false;
     }
     $pages[] = $count;
     $current += $count;
     printf("Page %d will get %d photos. (rand=%s)\n", count($pages), $count, number_format($random, 2));
 
-    // Create the page:
+    // Create new page:
     $width = $spread ? $GLOBALS['page_width'] * 2 : $GLOBALS['page_width'];
-    $svg = new Svg_Document($GLOBALS['page_width'], $GLOBALS['page_height']);
+    if(count($pages) == 1)
+    {
+        $svg = new Svg_Document($width, $GLOBALS['page_height']);
+    }
+
+    // Add the photo's:
+    switch($count)
+    {
+        case 1:
+        {
+
+            break;
+        }
+        case 2:
+        {
+
+            break;
+        }
+        case 3:
+        {
+
+            break;
+        }
+        case 4:
+        {
+
+            break;
+        }
+    }
+
+    // Add border:
+    $border = new Svg_Border(
+        array(
+            'fill' => randomColor(),
+            'stroke' => randomColor(),
+            'border-radius' => 10,
+            'size' => 40,
+            'width' => $width
+        )
+    );
+    $svg->addElement($border);
+
+    if(count($pages) % 2 == 1) {
+        printf("Save page...\n");
+        $svg->parse(sprintf('./page%d.svg', count($pages)));
+
+        $spread = $current != 0 && !$lastpage;
+        $width = $spread ? $GLOBALS['page_width'] * 2 : $GLOBALS['page_width'];
+
+        // Create new page:
+        $svg = new Svg_Document($width, $GLOBALS['page_height']);
+    }
 }
+
+if(count($pages) % 2 == 0) {
+    // Save last page:
+    printf("Save page...\n");
+    $svg->parse(sprintf('./page%d.svg', count($pages)));
+}
+
 
 /*foreach($files as $file)
 {
