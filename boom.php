@@ -50,13 +50,19 @@ $GLOBALS['max_image_height'] = $GLOBALS['page_height'] * 1.5;
 // Set image ratios:
 $GLOBALS['ratio']  = 3/2;
 
-// Colors:
+// Colors: (Kuler: Interactive Map (modified) + Girly Girl
 $GLOBALS['colors'] = array(
     'F31976',
-    '333333',
+    '5F2478',
     '06BDB1',
     'F5C229',
-    'F1702B'
+    'F1702B',
+
+    'F21B6A',
+    'F2BDD0',
+    '04BFBF',
+    '09A603',
+    'F2E205'
 );
 
 // Layouts:
@@ -85,27 +91,8 @@ function magicLayout($positions, &$svg)
         $imgRatio           = $imgInfo[0] / $imgInfo[1];
         $x                  = $currentPosition['x'] * $GLOBALS['page_width'];
         $y                  = $currentPosition['y'] * $GLOBALS['page_height'];
-//        $maxWidth           = $currentPosition['w'] * $GLOBALS['page_width'];
-//        $maxHeight          = $currentPosition['h'] * $GLOBALS['page_height'];
         $maxWidth  = $GLOBALS['page_width'] * (($currentPosition['x'] * 2) - (max(0, $currentPosition['x'] - 0.5) * 4)) - ($GLOBALS['margin'] * 2);
         $maxHeight = $GLOBALS['page_height'] * (($currentPosition['y'] * 2) - (max(0, $currentPosition['y'] - 0.5) * 4)) - ($GLOBALS['margin'] * 2);
-
-/*        if($i < count($positions) - 1) {
-            // There are more positions:
-            $nextPosition = $positions[$i + 1];
-            // Check the distance between this and the next picture:
-
-        } else {
-            // This is the last position:
-            if($i > 0) {
-                $previousPosition = $positions[$i - 1];
-            } else {
-                // This page only has one position:
-                // Max width and max height determine the bounding boxes:
-                $maxWidth  = ($GLOBALS['page_width'] * ($currentPosition['x'] * 2) - (max(0, $currentPosition['x'] - 0.5) * 4)) - ($GLOBALS['margin'] * 2);
-                $maxHeight = ($GLOBALS['page_height'] * ($currentPosition['y'] * 2) - (max(0, $currentPosition['y'] - 0.5) * 4)) - ($GLOBALS['margin'] * 2);
-            }
-        }*/
 
         // Set image size:
         if($imgRatio < 1)
@@ -158,11 +145,34 @@ function magicLayout($positions, &$svg)
                 'x' => $x - $imgWidth / 2,
                 'y' => $y - $imgHeight / 2,
                 'width' => $imgWidth,
-                'height' => $imgHeight
+                'height' => $imgHeight,
+                'border-radius' => 20,
+                'stroke' => array(
+                    array(
+                        'width' => 3, 'dasharray' => '5, 5', 'color' => randomColor(), 'linecap' => 'round', 'offset' => 5
+                    ),
+                    array(
+                        'width' => 3, 'dasharray' => '5, 5', 'color' => randomColor(), 'linecap' => 'round', 'offset' => -5
+                    )
+                ),
+                'rotation' => rand(-10, 10),
+                'extra' => 'tack'
             )
         );
         $svg->addElement($image);
     }
+}
+
+/**
+ * Helper function to sort array
+ *
+ * @param $a
+ * @param $b
+ * @return bool
+ */
+function sortByOrientation($a, $b)
+{
+    return $a['orientation'] < $b['orientation'];
 }
 
 // Iterate through the files and add them to pages:
@@ -197,47 +207,53 @@ while($current < count($files))
     if(count($pages) == 1)
     {
         $svg = new Svg_Document($width, $GLOBALS['page_height']);
+        // Import SVG's as definitions:
+        foreach(glob('./clipart/*.svg') as $svgFile)
+        {
+            $svg->importSvgAsDefinition($svgFile, str_replace('.svg', '', basename($svgFile)));
+        }
     }
 
     // Create a background:
-    $types = array('dots', 'lines', 'lines45');
-    $selectedType = $types[rand(0, 2)];
-    switch($selectedType) {
-        case 'dots' :
-            $fill = randomColor();
-            $colorsArr = array('white');
-            $opacity = rand(0, 1) == 1 ? 1 : 0.25;
-            break;
-        default :
-            $fill = 'white';
-            $colorsArr = rand(0, 1) == 1 ? array(randomColor()) : array(randomColor(), randomColor());
-            $opacity = 0.25;
-            break;
+    if(!(count($pages) % 2 == 1 && $spread))
+    {
+        $types = array('dots', 'lines', 'lines45');
+        $selectedType = $types[rand(0, 2)];
+        switch($selectedType) {
+            case 'dots' :
+                $fill = randomColor();
+                $colorsArr = array('white');
+                $opacity = rand(0, 1) == 1 ? 1 : 0.25;
+                break;
+            default :
+                $fill = 'white';
+                $colorsArr = rand(0, 1) == 1 ? array(randomColor()) : array(randomColor(), randomColor());
+                $opacity = 0.25;
+                break;
+        }
+        $pattern = new Svg_Pattern(
+            array(
+                'type' => $selectedType,
+                'colors' => $colorsArr,
+                'opacity' => $opacity,
+                'fill' => $fill,
+                'offset' => 25,
+                'size' => 25,
+                'width' => $width,
+            )
+        );
+        $svg->addElement($pattern);
     }
-    $pattern = new Svg_Pattern(
-        array(
-            'type' => $selectedType,
-            'colors' => $colorsArr,
-            'opacity' => $opacity,
-            'fill' => $fill,
-            'offset' => 25,
-            'size' => 25,
-            'width' => $width
-        )
-    );
-
-    // $svg->addElement($pattern);
 
     // Add the photo's:
     $leftX = (count($pages) % 2 == 1 && $spread) ? $GLOBALS['page_width'] : 0;
     $centerX = $leftX + $GLOBALS['page_width'] / 2;
     $centerY = $GLOBALS['page_height'] / 2;
     $wrap = new Svg_Group(
-        'wrap_'.count($pages),
-        array(
-            'transform' => 'translate('.$leftX.', 0)'
-        )
+        'wrap_'.count($pages)
     );
+    $wrap->getSvgData()->addAttribute('transform', 'translate('.$leftX.', 0)');
+
     switch($count)
     {
         case 1:
@@ -299,11 +315,190 @@ while($current < count($files))
         }
         case 3:
         {
+            // 3 pictures:
+            $file1 = $files[$current - 1];
+            $file2 = $files[$current - 2];
+            $file3 = $files[$current - 3];
+            $info = getimagesize($file1);
+            $orientation1 = $info[0] / $info[1];
+            $info = getimagesize($file2);
+            $orientation2 = $info[0] / $info[1];
+            $info = getimagesize($file3);
+            $orientation3 = $info[0] / $info[1];
+            /*
+             * 000
+             * 100
+             * 110
+             * 111
+             */
+
+            // Sort by orientation:
+            $f = array(
+                array('file' => $file1, 'orientation' => $orientation1),
+                array('file' => $file2, 'orientation' => $orientation2),
+                array('file' => $file3, 'orientation' => $orientation3),
+            );
+            usort($f, sortByOrientation);
+            if($f[0]['orientation'] > 1 && $f[1]['orientation'] > 1 && $f[2]['orientation'] > 1) {
+                // landscape, landscape, landscape
+                $positions = array(
+                    array(
+                        'file' => $f[0]['file'], 'x' => 0.35, 'y' => 0.25
+                    ),
+                    array(
+                        'file' => $f[1]['file'], 'x' => 0.65, 'y' => 0.5
+                    ),
+                    array(
+                        'file' => $f[2]['file'], 'x' => 0.35, 'y' => 0.75
+                    )
+                );
+            } elseif($f[0]['orientation'] > 1 && $f[1]['orientation'] > 1 && $f[2]['orientation'] < 1) {
+                // landscape, landscape, portrait
+                $positions = array(
+                    array(
+                        'file' => $f[0]['file'], 'x' => 0.5, 'y' => 0.3
+                    ),
+                    array(
+                        'file' => $f[1]['file'], 'x' => 0.3, 'y' => 0.7
+                    ),
+                    array(
+                        'file' => $f[2]['file'], 'x' => 0.75, 'y' => 0.7
+                    )
+                );
+            } elseif($f[0]['orientation'] > 1 && $f[1]['orientation'] < 1 && $f[2]['orientation'] < 1) {
+                // landscape, portrait, portrait
+                $positions = array(
+                    array(
+                        'file' => $f[0]['file'], 'x' => 0.5, 'y' => 0.3
+                    ),
+                    array(
+                        'file' => $f[1]['file'], 'x' => 0.25, 'y' => 0.7
+                    ),
+                    array(
+                        'file' => $f[2]['file'], 'x' => 0.75, 'y' => 0.7
+                    )
+                );
+            } else {
+                // portrait, portrait, portrait
+                $positions = array(
+                    array(
+                        'file' => $f[0]['file'], 'x' => 0.3, 'y' => 0.3
+                    ),
+                    array(
+                        'file' => $f[1]['file'], 'x' => 0.3, 'y' => 0.5
+                    ),
+                    array(
+                        'file' => $f[2]['file'], 'x' => 0.7, 'y' => 0.7
+                    )
+                );
+            }
+
+            magicLayout($positions, $wrap);
 
             break;
         }
         case 4:
         {
+            // 4 pictures:
+            $file1 = $files[$current - 1];
+            $file2 = $files[$current - 2];
+            $file3 = $files[$current - 3];
+            $file4 = $files[$current - 4];
+            $info = getimagesize($file1);
+            $orientation1 = $info[0] / $info[1];
+            $info = getimagesize($file2);
+            $orientation2 = $info[0] / $info[1];
+            $info = getimagesize($file3);
+            $orientation3 = $info[0] / $info[1];
+            $info = getimagesize($file4);
+            $orientation4 = $info[0] / $info[1];
+            /*
+             * 0000
+             * 1000
+             * 1100
+             * 1110
+             * 1111
+             */
+            // Sort by orientation:
+            $f = array(
+                array('file' => $file1, 'orientation' => $orientation1),
+                array('file' => $file2, 'orientation' => $orientation2),
+                array('file' => $file3, 'orientation' => $orientation3),
+                array('file' => $file4, 'orientation' => $orientation4)
+            );
+            usort($f, sortByOrientation);
+
+            if(
+                ($f[0]['orientation'] > 1 && $f[1]['orientation'] > 1 && $f[3]['orientation'] > 1 && $f[4]['orientation'] > 1) ||
+                ($f[0]['orientation'] < 1 && $f[1]['orientation'] < 1 && $f[3]['orientation'] < 1 && $f[4]['orientation'] < 1)
+            ) {
+                // landscape, landscape, landscape, landscape
+                // portrait, portrait, portrait, portrait
+                $positions = array(
+                    array(
+                        'file' => $f[0]['file'], 'x' => 0.3, 'y' => 0.3
+                    ),
+                    array(
+                        'file' => $f[1]['file'], 'x' => 0.7, 'y' => 0.3
+                    ),
+                    array(
+                        'file' => $f[2]['file'], 'x' => 0.3, 'y' => 0.7
+                    ),
+                    array(
+                        'file' => $f[3]['file'], 'x' => 0.7, 'y' => 0.7
+                    )
+                );
+            } elseif($f[0]['orientation'] > 1 && $f[1]['orientation'] > 1 && $f[3]['orientation'] > 1 && $f[4]['orientation'] < 1) {
+                // landscape, landscape, landscape, portrait
+                $positions = array(
+                    array(
+                        'file' => $f[0]['file'], 'x' => 0.5, 'y' => 0.3
+                    ),
+                    array(
+                        'file' => $f[1]['file'], 'x' => 0.3, 'y' => 0.5
+                    ),
+                    array(
+                        'file' => $f[2]['file'], 'x' => 0.3, 'y' => 0.7
+                    ),
+                    array(
+                        'file' => $f[3]['file'], 'x' => 0.7, 'y' => 0.6
+                    )
+                );
+            } elseif($f[0]['orientation'] > 1 && $f[1]['orientation'] < 1 && $f[3]['orientation'] < 1 && $f[4]['orientation'] < 1) {
+                // landscape, landscape, portrait, portrait
+                $positions = array(
+                    array(
+                        'file' => $f[0]['file'], 'x' => 0.3, 'y' => 0.3
+                    ),
+                    array(
+                        'file' => $f[1]['file'], 'x' => 0.7, 'y' => 0.7
+                    ),
+                    array(
+                        'file' => $f[2]['file'], 'x' => 0.7, 'y' => 0.4
+                    ),
+                    array(
+                        'file' => $f[3]['file'], 'x' => 0.3, 'y' => 0.6
+                    )
+                );
+            } else {
+                // landscape, portrait, portrait, portrait
+                $positions = array(
+                    array(
+                        'file' => $f[0]['file'], 'x' => 0.5, 'y' => 0.3
+                    ),
+                    array(
+                        'file' => $f[1]['file'], 'x' => 0.25, 'y' => 0.75
+                    ),
+                    array(
+                        'file' => $f[2]['file'], 'x' => 0.5, 'y' => 0.75
+                    ),
+                    array(
+                        'file' => $f[3]['file'], 'x' => 0.75, 'y' => 0.75
+                    )
+                );
+            }
+
+            magicLayout($positions, $wrap);
 
             break;
         }
@@ -331,6 +526,12 @@ while($current < count($files))
 
         // Create new page:
         $svg = new Svg_Document($width, $GLOBALS['page_height']);
+
+        // Import SVG's as definitions:
+        foreach(glob('./clipart/*.svg') as $svgFile)
+        {
+            $svg->importSvgAsDefinition($svgFile, str_replace('.svg', '', basename($svgFile)));
+        }
     }
 }
 
