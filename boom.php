@@ -3,6 +3,15 @@
 echo "Photo-BOOM!!!\n";
 echo "Command-Line Photoalbum generator because all those apps from different manufacturers just don't quite do the trick...\n\n";
 
+$GLOBALS['args'] = array();
+foreach($argv as $var) {
+    $args[$var] = $var;
+}
+
+if(isset($args['debug'])) {
+    echo "Debugging enabled\n\n";
+}
+
 if(!file_exists('./images') || !is_dir('./images')) {
     die("Error: images-folder not found. Aborting...\n");
 }
@@ -26,6 +35,7 @@ $GLOBALS['page_width'] = 210 * 4;   // A4
 $GLOBALS['page_height'] = 297 * 4;  // A4
 
 $GLOBALS['margin'] = 80;    // Margins around the page
+$GLOBALS['padding'] = 40;   // Padding between pictures
 
 $GLOBALS['photo_random_seed'] = array(
     1 => array(0, 0.1),
@@ -55,6 +65,104 @@ $GLOBALS['colors'] = array(
 function randomColor()
 {
     return '#' . $GLOBALS['colors'][rand(0, count($GLOBALS['colors'])-1)];
+}
+
+/**
+ * @param $positions array
+ * @param $svg Svg_Element
+ */
+function magicLayout($positions, &$svg)
+{
+    for($i = 0; $i < count($positions); $i ++)
+    {
+        // Each position has an X and an Y, defining their center in percent.
+        // The pictures are put on the page is big as possible with the following conditions:
+        // - Their outer boundaries may never exceed the pages' margin.
+        // - The photos must have at least this padding between them.
+
+        $currentPosition    = $positions[$i];
+        $imgInfo            = getimagesize($currentPosition['file']);
+        $imgRatio           = $imgInfo[0] / $imgInfo[1];
+        $x                  = $currentPosition['x'] * $GLOBALS['page_width'];
+        $y                  = $currentPosition['y'] * $GLOBALS['page_height'];
+//        $maxWidth           = $currentPosition['w'] * $GLOBALS['page_width'];
+//        $maxHeight          = $currentPosition['h'] * $GLOBALS['page_height'];
+        $maxWidth  = $GLOBALS['page_width'] * (($currentPosition['x'] * 2) - (max(0, $currentPosition['x'] - 0.5) * 4)) - ($GLOBALS['margin'] * 2);
+        $maxHeight = $GLOBALS['page_height'] * (($currentPosition['y'] * 2) - (max(0, $currentPosition['y'] - 0.5) * 4)) - ($GLOBALS['margin'] * 2);
+
+/*        if($i < count($positions) - 1) {
+            // There are more positions:
+            $nextPosition = $positions[$i + 1];
+            // Check the distance between this and the next picture:
+
+        } else {
+            // This is the last position:
+            if($i > 0) {
+                $previousPosition = $positions[$i - 1];
+            } else {
+                // This page only has one position:
+                // Max width and max height determine the bounding boxes:
+                $maxWidth  = ($GLOBALS['page_width'] * ($currentPosition['x'] * 2) - (max(0, $currentPosition['x'] - 0.5) * 4)) - ($GLOBALS['margin'] * 2);
+                $maxHeight = ($GLOBALS['page_height'] * ($currentPosition['y'] * 2) - (max(0, $currentPosition['y'] - 0.5) * 4)) - ($GLOBALS['margin'] * 2);
+            }
+        }*/
+
+        // Set image size:
+        if($imgRatio < 1)
+        {
+            // Landscape
+            $imgWidth = $maxWidth;
+            $imgHeight = $maxWidth * $GLOBALS['ratio'];
+            if($imgHeight > $maxHeight) {
+                $imgWidth = $imgWidth * ($maxHeight / $imgHeight);
+                $imgHeight = $maxHeight;
+            }
+        } else {
+            // Portrait
+            $imgHeight = $maxHeight;
+            $imgWidth = $maxHeight * $GLOBALS['ratio'];
+            if($imgWidth > $maxWidth) {
+                $imgHeight = $imgHeight * ($maxWidth / $imgWidth);
+                $imgWidth  = $maxWidth;
+            }
+        }
+
+        // Debug:
+        if(isset($GLOBALS['args']['debug']))
+        {
+            $rect = new Svg_Element('rect', array(
+                'fill' => 'none',
+                'stroke' => 'blue',
+                'x' => $x - $maxWidth / 2,
+                'y' => $y - $maxHeight / 2,
+                'width' => $maxWidth,
+                'height' => $maxHeight
+            ));
+            $svg->addElement($rect);
+
+            $rect = new Svg_Element('rect', array(
+                'fill' => 'none',
+                'stroke' => 'red',
+                'x' => $x - $imgWidth / 2,
+                'y' => $y - $imgHeight / 2,
+                'width' => $imgWidth,
+                'height' => $imgHeight
+            ));
+            $svg->addElement($rect);
+            // End debug
+        }
+
+        // Add photo:
+        $image = new Svg_Fancybox($currentPosition['file'],
+            array(
+                'x' => $x - $imgWidth / 2,
+                'y' => $y - $imgHeight / 2,
+                'width' => $imgWidth,
+                'height' => $imgHeight
+            )
+        );
+        $svg->addElement($image);
+    }
 }
 
 // Iterate through the files and add them to pages:
@@ -118,42 +226,75 @@ while($current < count($files))
         )
     );
 
-    $svg->addElement($pattern);
+    // $svg->addElement($pattern);
 
     // Add the photo's:
     $leftX = (count($pages) % 2 == 1 && $spread) ? $GLOBALS['page_width'] : 0;
     $centerX = $leftX + $GLOBALS['page_width'] / 2;
     $centerY = $GLOBALS['page_height'] / 2;
+    $wrap = new Svg_Group(
+        'wrap_'.count($pages),
+        array(
+            'transform' => 'translate('.$leftX.', 0)'
+        )
+    );
     switch($count)
     {
         case 1:
         {
             // Center picture:
-            $file = $files[$current - 1];
-            $info = getimagesize($file);
-            if($info[0] / $info[1] > 1) {
-                // Landscape
-                $maxWidth  = $GLOBALS['page_width'] - ($GLOBALS['margin'] * 2);
-                $maxHeight = $maxWidth / $GLOBALS['ratio'];
-            } else {
-                // Portrait
-                $maxHeight = $GLOBALS['page_height'] - ($GLOBALS['margin'] * 2);
-                $maxWidth  = $maxHeight / $GLOBALS['ratio'];
-            }
-            $photo = new Svg_Fancybox($file,
+            $positions = array(
                 array(
-                    'width' => $maxWidth,
-                    'height' => $maxHeight,
-                    'x' => $centerX - ($maxWidth / 2),
-                    'y' => $centerY - ($maxHeight / 2)
+                    'file' => $files[$current - 1],
+                    'x' => 0.5,
+                    'y' => 0.5
                 )
             );
-            $svg->addElement($photo);
+            magicLayout($positions, $wrap);
             break;
         }
         case 2:
         {
+            // 2 pictures:
+            $file1 = $files[$current - 1];
+            $file2 = $files[$current - 2];
+            $info = getimagesize($file1);
+            $orientation1 = $info[0] / $info[1];
+            $info = getimagesize($file2);
+            $orientation2 = $info[0] / $info[1];
 
+            if($orientation1 > 1 && $orientation2 > 1) {
+                // landscape, landscape
+                $positions = array(
+                    array(
+                        'file' => $file1, 'x' => 0.5, 'y' => 0.29
+                    ),
+                    array(
+                        'file' => $file2, 'x' => 0.5, 'y' => 0.71
+                    )
+                );
+            } elseif($orientation1 < 1 && $orientation2 < 1) {
+                // portrait, portrait
+                $positions = array(
+                    array(
+                        'file' => $file1, 'x' => 0.29, 'y' => 0.5
+                    ),
+                    array(
+                        'file' => $file2, 'x' => 0.71, 'y' => 0.5
+                    )
+                );
+            } else {
+                // portrait, landscape
+                $positions = array(
+                    array(
+                        'file' => $file1, 'x' => 0.5, 'y' => 0.29
+                    ),
+                    array(
+                        'file' => $file2, 'x' => 0.5, 'y' => 0.71
+                    )
+                );
+            }
+            magicLayout($positions, $wrap);
             break;
         }
         case 3:
@@ -167,22 +308,23 @@ while($current < count($files))
             break;
         }
     }
-
-    // Add border:
-    $border = new Svg_Border(
-        array(
-            'fill' => randomColor(),
-            'stroke' => randomColor(),
-            'border-radius' => 10,
-            'size' => 40,
-            'width' => $width
-        )
-    );
-    $svg->addElement($border);
+    $svg->addElement($wrap);
 
     if(count($pages) % 2 == 1) {
-        printf("Save page...\n");
-        $svg->parse(sprintf('./page%d.svg', count($pages)));
+        // Add border:
+        $border = new Svg_Border(
+            array(
+                'fill' => randomColor(),
+                'stroke' => randomColor(),
+                'border-radius' => 10,
+                'size' => 40,
+                'width' => $width
+            )
+        );
+        $svg->addElement($border);
+
+        printf("Save page... (page%d.svg)\n", ceil(count($pages) / 2));
+        $svg->parse(sprintf('./page%d.svg', ceil(count($pages) / 2)));
 
         $spread = $current != 0 && !$lastpage;
         $width = $spread ? $GLOBALS['page_width'] * 2 : $GLOBALS['page_width'];
@@ -194,8 +336,12 @@ while($current < count($files))
 
 if(count($pages) % 2 == 0) {
     // Save last page:
-    printf("Save page...\n");
-    $svg->parse(sprintf('./page%d.svg', count($pages)));
+    $pageNum = ceil(count($pages) / 2);
+    if(count($pages) % 2 == 0) {
+        $pageNum += 1;
+    }
+    printf("Save page... (page%d.svg)\n", $pageNum);
+    $svg->parse(sprintf('./page%d.svg', $pageNum));
 }
 
 
