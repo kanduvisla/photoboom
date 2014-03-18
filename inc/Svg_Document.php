@@ -175,11 +175,7 @@ class Svg_Document extends Svg_Element
             }
             $results = $this->defs->xpath('g[@id="'.$id.'"]/path');
             $group   = $results[0];
-            // $group   = simplexml_load_string(str_replace('id="'.$id.'"', '', $group->asXML()));
-            // $group->attributes()->id = 'bar';
-            // unset($group->attributes()->id);
-            // $attr    = $group->attributes();
-            // $group['id'] = 'foobar';
+            $group->attributes()->fill = null;
             $this->sxml_append($g->getSvgData(), $group);
             $this->addElement($g);
         }

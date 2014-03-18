@@ -1,5 +1,7 @@
 <?php
 
+require_once(dirname(__FILE__) . '/Svg_Imagebox.php');
+
 /*
  * A fancy extension on the default imagebox. Parameters:
  * - rotation

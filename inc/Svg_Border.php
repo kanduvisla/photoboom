@@ -1,5 +1,7 @@
 <?php
 
+require_once(dirname(__FILE__) . '/Svg_Group.php');
+
 /**
  * The SVG Border is a border around the whole page.
  * It has the following parameters:

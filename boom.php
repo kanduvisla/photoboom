@@ -12,20 +12,16 @@ if(isset($args['debug'])) {
     echo "Debugging enabled\n\n";
 }
 
+// Check for image dir:
 if(!file_exists('./images') || !is_dir('./images')) {
     die("Error: images-folder not found. Aborting...\n");
 }
 
 // Load dependencies:
-require_once('inc/Svg_Element.php');
-require_once('inc/Svg_Document.php');
-require_once('inc/Svg_Group.php');
-require_once('inc/Svg_Image.php');
-require_once('inc/Svg_Imagebox.php');
-require_once('inc/Svg_Fancybox.php');
-require_once('inc/Svg_Textbox.php');
-require_once('inc/Svg_Pattern.php');
-require_once('inc/Svg_Border.php');
+foreach(glob('inc/*.php') as $file)
+{
+    require_once($file);
+}
 
 $files = glob('images/*.jpg');
 printf("Found %d images\n", count($files));
@@ -64,124 +60,6 @@ $GLOBALS['colors'] = array(
     '09A603',
     'F2E205'
 );
-
-// Layouts:
-
-// Functions:
-function randomColor()
-{
-    return '#' . $GLOBALS['colors'][rand(0, count($GLOBALS['colors'])-1)];
-}
-
-/**
- * @param $positions array
- * @param $svg Svg_Element
- */
-function magicLayout($positions, &$svg)
-{
-    for($i = 0; $i < count($positions); $i ++)
-    {
-        // Each position has an X and an Y, defining their center in percent.
-        // The pictures are put on the page is big as possible with the following conditions:
-        // - Their outer boundaries may never exceed the pages' margin.
-        // - The photos must have at least this padding between them.
-
-        $currentPosition    = $positions[$i];
-        $imgInfo            = getimagesize($currentPosition['file']);
-        $imgRatio           = $imgInfo[0] / $imgInfo[1];
-        $x                  = $currentPosition['x'] * $GLOBALS['page_width'];
-        $y                  = $currentPosition['y'] * $GLOBALS['page_height'];
-        $maxWidth  = $GLOBALS['page_width'] * (($currentPosition['x'] * 2) - (max(0, $currentPosition['x'] - 0.5) * 4)) - ($GLOBALS['margin'] * 2);
-        $maxHeight = $GLOBALS['page_height'] * (($currentPosition['y'] * 2) - (max(0, $currentPosition['y'] - 0.5) * 4)) - ($GLOBALS['margin'] * 2);
-
-        // Set image size:
-        if($imgRatio < 1)
-        {
-            // Landscape
-            $imgWidth = $maxWidth;
-            $imgHeight = $maxWidth * $GLOBALS['ratio'];
-            if($imgHeight > $maxHeight) {
-                $imgWidth = $imgWidth * ($maxHeight / $imgHeight);
-                $imgHeight = $maxHeight;
-            }
-        } else {
-            // Portrait
-            $imgHeight = $maxHeight;
-            $imgWidth = $maxHeight * $GLOBALS['ratio'];
-            if($imgWidth > $maxWidth) {
-                $imgHeight = $imgHeight * ($maxWidth / $imgWidth);
-                $imgWidth  = $maxWidth;
-            }
-        }
-
-        // Debug:
-        if(isset($GLOBALS['args']['debug']))
-        {
-            $rect = new Svg_Element('rect', array(
-                'fill' => 'none',
-                'stroke' => 'blue',
-                'x' => $x - $maxWidth / 2,
-                'y' => $y - $maxHeight / 2,
-                'width' => $maxWidth,
-                'height' => $maxHeight
-            ));
-            $svg->addElement($rect);
-
-            $rect = new Svg_Element('rect', array(
-                'fill' => 'none',
-                'stroke' => 'red',
-                'x' => $x - $imgWidth / 2,
-                'y' => $y - $imgHeight / 2,
-                'width' => $imgWidth,
-                'height' => $imgHeight
-            ));
-            $svg->addElement($rect);
-            // End debug
-        }
-
-        // Add photo:
-        $image = new Svg_Fancybox($currentPosition['file'],
-            array(
-                'x' => $x - $imgWidth / 2,
-                'y' => $y - $imgHeight / 2,
-                'width' => $imgWidth,
-                'height' => $imgHeight,
-                'border-radius' => 20,
-                'stroke' => array(
-                    array(
-                        'width' => 3, 'dasharray' => '5, 5', 'color' => randomColor(), 'linecap' => 'round', 'offset' => 5
-                    ),
-                    array(
-                        'width' => 3, 'dasharray' => '5, 5', 'color' => randomColor(), 'linecap' => 'round', 'offset' => -5
-                    )
-                ),
-                'rotation' => rand(-10, 10),
-                'extra' => 'tack'
-            )
-        );
-        // $svg->addElement($image);
-    }
-}
-
-/**
- * Helper function to sort array
- *
- * @param $a
- * @param $b
- * @return bool
- */
-function sortByOrientation($a, $b)
-{
-    return $a['orientation'] < $b['orientation'];
-}
-
-function importDefinitions(&$svg, $files)
-{
-    foreach($files as $svgFile)
-    {
-        $svg->importSvgAsDefinition($svgFile, str_replace('.svg', '', basename($svgFile)));
-    }
-}
 
 // Iterate through the files and add them to pages:
 $pages = array();
@@ -224,13 +102,13 @@ while($current < count($files))
         $selectedType = $types[rand(0, 2)];
         switch($selectedType) {
             case 'dots' :
-                $fill = randomColor();
+                $fill = Boom::randomColor();
                 $colorsArr = array('white');
                 $opacity = rand(0, 1) == 1 ? 1 : 0.25;
                 break;
             default :
                 $fill = 'white';
-                $colorsArr = rand(0, 1) == 1 ? array(randomColor()) : array(randomColor(), randomColor());
+                $colorsArr = rand(0, 1) == 1 ? array(Boom::randomColor()) : array(Boom::randomColor(), Boom::randomColor());
                 $opacity = 0.25;
                 break;
         }
@@ -253,8 +131,8 @@ while($current < count($files))
         // Clouds and grass:
 
         // Import SVG's as definitions:
-        importDefinitions($svg, glob('./clipart/cloud*.svg'));
-        importDefinitions($svg, glob('./clipart/gras.svg'));
+        Boom::importDefinitions($svg, glob('./clipart/cloud*.svg'));
+        Boom::importDefinitions($svg, './clipart/gras.svg');
         $totalClouds = rand(1, 6);
         for($i = 0; $i < $totalClouds; $i ++) {
             $svg->addUse('cloud' . rand(1, 3), array(
@@ -262,6 +140,8 @@ while($current < count($files))
                 'y' => $GLOBALS['margin'] + (rand(0, 200))
             ));
         }
+
+        // Gras:
         $svg->addUse('gras', array(
             'x' => 0,
             'y' => $GLOBALS['page_height'] - 200
@@ -269,18 +149,31 @@ while($current < count($files))
 
         // Random butterflies:
         $totalButterflies = rand(1, 6);
-        importDefinitions($svg, glob('./clipart/butterfly.svg'));
+        Boom::importDefinitions($svg, './clipart/butterfly.svg');
         for($i = 0; $i < $totalButterflies; $i ++)
         {
             $x = $GLOBALS['page_width'] * (rand(0, 200) / 100);
-            $y = $GLOBALS['margin'] + (rand(0, $GLOBALS['page_height']));
+            $y = $GLOBALS['margin'] + (rand(0, $GLOBALS['page_height'] / 1.5));
             $svg->addUse('butterfly', array(
 //                'x' => $GLOBALS['page_width'] * (rand(0, 200) / 100),
 //                'y' => $GLOBALS['margin'] + (rand(0, 500)),
                 'transform' => 'translate('.$x.','.$y.'), rotate('.rand(-70, 70).'), scale('.(rand(10, 100) / 100).')',
-                'fill' => randomColor()
+                'fill' => Boom::randomColor()
             ), true);
         }
+
+        // Kite:
+        Boom::importDefinitions($svg, './clipart/vlieger.svg');
+        $x = $GLOBALS['page_width'] * (rand(0, 200) / 200);
+        $y = 250;
+        $svg->addUse('vlieger', array('x' => $x, 'y' => $y));
+
+        // Bee:
+        Boom::importDefinitions($svg, './clipart/bij.svg');
+        $x = $GLOBALS['page_width'] * (rand(0, 200) / 100);
+        $y = $GLOBALS['margin'] + (rand(0, $GLOBALS['page_height'] / 1.5));
+        $svg->addUse('bij', array('x' => $x, 'y' => $y, 'transform' => 'scale(0.5), rotate('.rand(-30, 30).')'));
+
     }
 
 
@@ -306,7 +199,7 @@ while($current < count($files))
                     'y' => 0.5
                 )
             );
-            magicLayout($positions, $wrap);
+            Boom::magicLayout($positions, $wrap);
             break;
         }
         case 2:
@@ -350,7 +243,7 @@ while($current < count($files))
                     )
                 );
             }
-            magicLayout($positions, $wrap);
+            Boom::magicLayout($positions, $wrap);
             break;
         }
         case 3:
@@ -378,7 +271,7 @@ while($current < count($files))
                 array('file' => $file2, 'orientation' => $orientation2),
                 array('file' => $file3, 'orientation' => $orientation3),
             );
-            usort($f, sortByOrientation);
+            usort($f, array('Boom', 'sortByOrientation'));
             if($f[0]['orientation'] > 1 && $f[1]['orientation'] > 1 && $f[2]['orientation'] > 1) {
                 // landscape, landscape, landscape
                 $positions = array(
@@ -433,7 +326,7 @@ while($current < count($files))
                 );
             }
 
-            magicLayout($positions, $wrap);
+            Boom::magicLayout($positions, $wrap);
 
             break;
         }
@@ -466,7 +359,7 @@ while($current < count($files))
                 array('file' => $file3, 'orientation' => $orientation3),
                 array('file' => $file4, 'orientation' => $orientation4)
             );
-            usort($f, sortByOrientation);
+            usort($f, array('Boom', 'sortByOrientation'));
 
             if(
                 ($f[0]['orientation'] > 1 && $f[1]['orientation'] > 1 && $f[3]['orientation'] > 1 && $f[4]['orientation'] > 1) ||
@@ -538,7 +431,7 @@ while($current < count($files))
                 );
             }
 
-            magicLayout($positions, $wrap);
+            Boom::magicLayout($positions, $wrap);
 
             break;
         }
@@ -549,8 +442,8 @@ while($current < count($files))
         // Add border:
         $border = new Svg_Border(
             array(
-                'fill' => randomColor(),
-                'stroke' => randomColor(),
+                'fill' => Boom::randomColor(),
+                'stroke' => Boom::randomColor(),
                 'border-radius' => 10,
                 'size' => 40,
                 'width' => $width
@@ -584,119 +477,3 @@ if(count($pages) % 2 == 0) {
     printf("Save page... (page%d.svg)\n", $pageNum);
     $svg->parse(sprintf('./page%d.svg', $pageNum));
 }
-
-
-/*foreach($files as $file)
-{
-    $info = getimagesize($file);
-//     echo $info[1] / $info[0] . "\n";
-
-}*/
-
-// Testing purposes:
-//$svg = new Svg_Document($GLOBALS['page_width'], $GLOBALS['page_height']);
-
-// Set the dropshadow:
-//$svg->setDropshadow();
-
-// Import SVG's as definitions:
-//foreach(glob('./clipart/*.svg') as $svgFile)
-//{
-//    $svg->importSvgAsDefinition($svgFile, str_replace('.svg', '', basename($svgFile)));
-//}
-
-// Calculate layouts:
-// Layouts are done by drawing imaginary lines:
-/**
- * @param $svg      Svg_Document
- * @param $options  array
- */
-/*function generateLayout($svg, $options)
-{
-
-}
-
-generateLayout($svg,
-    array(
-
-    )
-);*/
-
-/*$rect = new Svg_Element('rect',
-    array(
-        'rx' => 20,
-        'ry' => 20,
-        'width' => 420,
-        'height' => 220,
-        'fill' => 'red'
-    )
-);
-
-$group = new Svg_Group('group01');
-$group->addElement($rect);
-
-$svg->addDefinition($group);
-
-$svg->addUse('group01', array('x' => 10, 'y' => 10));*/
-
-// Pattern test:
-/*
-$pattern = new Svg_Pattern(
-    array(
-        'type' => 'dots',
-        'colors' => array('red', 'blue'),
-        'opacity' => .25,
-        'fill' => 'white',
-        'offset' => 25,
-        'size' => 25
-    )
-);
-
-$svg->addElement($pattern);
-
-// Image test:
-$image = new Svg_Fancybox('./images/test.jpg', array('width' => 200, 'height' => 200, 'x' => 100, 'y' => 100, 'border-radius' => 20,
-    'rotation' => 10, 'stroke' => array(
-        array(
-            'width' => 3, 'dasharray' => '5, 5', 'color' => '#ff0000', 'linecap' => 'round', 'offset' => 5
-        ),
-        array(
-            'width' => 3, 'dasharray' => '5, 5', 'color' => '#00ff00', 'linecap' => 'round', 'offset' => -5
-        )
-    )));
-$svg->addElement($image);
-
-$image = new Svg_Fancybox('./images/test.jpg', array('width' => 300, 'height' => 200, 'x' => 350, 'y' => 100));
-$svg->addElement($image);
-
-$image = new Svg_Fancybox('./images/test.jpg', array('width' => 200, 'height' => 300, 'x' => 100, 'y' => 350));
-$svg->addElement($image);
-
-$image = new Svg_Fancybox('./images/test.jpg', array('width' => 300, 'height' => 300, 'x' => 350, 'y' => 350,
-    'extra' => 'tack', 'rotation' => -5/*, 'dropshadow' => 1*//*));
-$svg->addElement($image);
-
-$image = new Svg_Fancybox('./images/test.jpg', array('width' => 550, 'height' => 200, 'x' => 100, 'y' => 700));
-$svg->addElement($image);
-
-// Add text:
-$textbox = new Svg_Textbox('Hello world' , array('x' => 500, 'y' => 850, 'border-radius' => 10, 'rotation' => 5,
-    'stroke' => array(
-            array(
-                'width' => 3, 'dasharray' => '5, 5', 'color' => '#ff0000', 'linecap' => 'round', 'offset' => 5
-            ),
-            array(
-                'width' => 3, 'dasharray' => '5, 5', 'color' => '#00ff00', 'linecap' => 'round', 'offset' => -5
-            )
-        )
-    )
-);
-
-$svg->addElement($textbox);
-
-// Add border:
-$border = new Svg_Border(array('fill' => '#0000ff', 'border-radius' => 10, 'size' => 40));
-$svg->addElement($border);
-
-$svg->parse('./test.svg');
-*/

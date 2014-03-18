@@ -1,5 +1,7 @@
 <?php
 
+require_once(dirname(__FILE__) . '/Svg_Element.php');
+
 class Svg_Group extends Svg_Element
 {
     /**
