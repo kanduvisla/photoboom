@@ -155,8 +155,6 @@ while($current < count($files))
             $x = $GLOBALS['page_width'] * (rand(0, 200) / 100);
             $y = $GLOBALS['margin'] + (rand(0, $GLOBALS['page_height'] / 1.5));
             $svg->addUse('butterfly', array(
-//                'x' => $GLOBALS['page_width'] * (rand(0, 200) / 100),
-//                'y' => $GLOBALS['margin'] + (rand(0, 500)),
                 'transform' => 'translate('.$x.','.$y.'), rotate('.rand(-70, 70).'), scale('.(rand(10, 100) / 100).')',
                 'fill' => Boom::randomColor()
             ), true);
@@ -173,10 +171,7 @@ while($current < count($files))
         $x = $GLOBALS['page_width'] * (rand(0, 200) / 100);
         $y = $GLOBALS['margin'] + (rand(0, $GLOBALS['page_height'] / 1.5));
         $svg->addUse('bij', array('x' => $x, 'y' => $y, 'transform' => 'scale(0.5), rotate('.rand(-30, 30).')'));
-
     }
-
-
 
     // Add the photo's:
     $leftX = (count($pages) % 2 == 1 && $spread) ? $GLOBALS['page_width'] : 0;
@@ -187,6 +182,86 @@ while($current < count($files))
     );
     $wrap->getSvgData()->addAttribute('transform', 'translate('.$leftX.', 0)');
 
+    // Alternative approach:
+    $positions = array();
+    $predefinedPositions = array(
+        1 => array(
+            array('x' => 0.5, 'y' => 0.5),
+        ),
+        2 => array(
+            array('x' => 0.5, 'y' => 0.25),
+            array('x' => 0.5, 'y' => 0.75),
+        ),
+        3 => array(
+            array('x' => 0.5, 'y' => 0.25),
+            array('x' => 0.5, 'y' => 0.5),
+            array('x' => 0.5, 'y' => 0.75),
+        ),
+        4 => array(
+            array('x' => 0.25, 'y' => 0.25),
+            array('x' => 0.75, 'y' => 0.25),
+            array('x' => 0.25, 'y' => 0.75),
+            array('x' => 0.75, 'y' => 0.75),
+        ),
+        5 => array(
+            array('x' => 0.5, 'y' => 0.5),
+            array('x' => 0.25, 'y' => 0.25),
+            array('x' => 0.75, 'y' => 0.25),
+            array('x' => 0.25, 'y' => 0.75),
+            array('x' => 0.75, 'y' => 0.75),
+        ),
+        6 => array(
+            array('x' => 0.25, 'y' => 0.25),
+            array('x' => 0.75, 'y' => 0.25),
+            array('x' => 0.25, 'y' => 0.5),
+            array('x' => 0.75, 'y' => 0.5),
+            array('x' => 0.25, 'y' => 0.75),
+            array('x' => 0.75, 'y' => 0.75),
+        ),
+        7 => array(
+            array('x' => 0.5, 'y' => 0.5),
+            array('x' => 0.25, 'y' => 0.25),
+            array('x' => 0.75, 'y' => 0.25),
+            array('x' => 0.25, 'y' => 0.5),
+            array('x' => 0.75, 'y' => 0.5),
+            array('x' => 0.25, 'y' => 0.75),
+            array('x' => 0.75, 'y' => 0.75),
+        ),
+        8 => array(
+            array('x' => 0.25, 'y' => 0.2),
+            array('x' => 0.75, 'y' => 0.2),
+            array('x' => 0.25, 'y' => 0.4),
+            array('x' => 0.75, 'y' => 0.4),
+            array('x' => 0.25, 'y' => 0.6),
+            array('x' => 0.75, 'y' => 0.6),
+            array('x' => 0.25, 'y' => 0.8),
+            array('x' => 0.75, 'y' => 0.8),
+        ),
+        9 => array(
+            array('x' => 0.25, 'y' => 0.25),
+            array('x' => 0.5, 'y' => 0.25),
+            array('x' => 0.75, 'y' => 0.25),
+            array('x' => 0.25, 'y' => 0.5),
+            array('x' => 0.5, 'y' => 0.5),
+            array('x' => 0.75, 'y' => 0.5),
+            array('x' => 0.25, 'y' => 0.75),
+            array('x' => 0.5, 'y' => 0.75),
+            array('x' => 0.75, 'y' => 0.75),
+        )
+    );
+    for($c = 1; $c <= $count; $c++)
+    {
+        $positions[] = array(
+            'file' => $files[$current - $c],
+            'scale' => max(0.25, 1 / $count),
+            'x' => $predefinedPositions[$count][$c - 1]['x'],
+            'y' => $predefinedPositions[$count][$c - 1]['y']
+        );
+    }
+    print_r($positions);
+    Boom::magicLayout($positions, $wrap);
+
+    /*
     switch($count)
     {
         case 1:
@@ -258,12 +333,6 @@ while($current < count($files))
             $orientation2 = $info[0] / $info[1];
             $info = getimagesize($file3);
             $orientation3 = $info[0] / $info[1];
-            /*
-             * 000
-             * 100
-             * 110
-             * 111
-             */
 
             // Sort by orientation:
             $f = array(
@@ -345,13 +414,7 @@ while($current < count($files))
             $orientation3 = $info[0] / $info[1];
             $info = getimagesize($file4);
             $orientation4 = $info[0] / $info[1];
-            /*
-             * 0000
-             * 1000
-             * 1100
-             * 1110
-             * 1111
-             */
+
             // Sort by orientation:
             $f = array(
                 array('file' => $file1, 'orientation' => $orientation1),
@@ -436,6 +499,8 @@ while($current < count($files))
             break;
         }
     }
+    */
+
     $svg->addElement($wrap);
 
     if(count($pages) % 2 == 1) {
@@ -459,12 +524,6 @@ while($current < count($files))
 
         // Create new page:
         $svg = new Svg_Document($width, $GLOBALS['page_height']);
-
-        // Import SVG's as definitions:
-//        foreach(glob('./clipart/*.svg') as $svgFile)
-//        {
-//            $svg->importSvgAsDefinition($svgFile, str_replace('.svg', '', basename($svgFile)));
-//        }
     }
 }
 
