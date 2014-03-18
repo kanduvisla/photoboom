@@ -152,16 +152,37 @@ class Svg_Document extends Svg_Element
      *
      * @param string $id
      * @param array $attributes
+     * @param boolean $copy
      */
-    public function addUse($id, $attributes = array())
+    public function addUse($id, $attributes = array(), $copy = false)
     {
-        $use = new SimpleXMLElement('<use />');
-        $use->addAttribute('xlink:xlink:href', '#'.$id);
-        foreach($attributes as $key => $value)
+
+        if(!$copy)
         {
-            $use->addAttribute($key, $value);
+            $use = new SimpleXMLElement('<use />');
+            $use->addAttribute('xlink:xlink:href', '#'.$id);
+            foreach($attributes as $key => $value)
+            {
+                $use->addAttribute($key, $value);
+            }
+            $this->addElement($use);
+        } else {
+
+            $g = new Svg_Group($id.rand(100000, 999999));
+            foreach($attributes as $key => $value)
+            {
+                $g->getSvgData()->addAttribute($key, $value);
+            }
+            $results = $this->defs->xpath('g[@id="'.$id.'"]/path');
+            $group   = $results[0];
+            // $group   = simplexml_load_string(str_replace('id="'.$id.'"', '', $group->asXML()));
+            // $group->attributes()->id = 'bar';
+            // unset($group->attributes()->id);
+            // $attr    = $group->attributes();
+            // $group['id'] = 'foobar';
+            $this->sxml_append($g->getSvgData(), $group);
+            $this->addElement($g);
         }
-        $this->addElement($use);
     }
 }
 

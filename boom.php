@@ -159,7 +159,7 @@ function magicLayout($positions, &$svg)
                 'extra' => 'tack'
             )
         );
-        $svg->addElement($image);
+        // $svg->addElement($image);
     }
 }
 
@@ -173,6 +173,14 @@ function magicLayout($positions, &$svg)
 function sortByOrientation($a, $b)
 {
     return $a['orientation'] < $b['orientation'];
+}
+
+function importDefinitions(&$svg, $files)
+{
+    foreach($files as $svgFile)
+    {
+        $svg->importSvgAsDefinition($svgFile, str_replace('.svg', '', basename($svgFile)));
+    }
 }
 
 // Iterate through the files and add them to pages:
@@ -207,11 +215,6 @@ while($current < count($files))
     if(count($pages) == 1)
     {
         $svg = new Svg_Document($width, $GLOBALS['page_height']);
-        // Import SVG's as definitions:
-        foreach(glob('./clipart/*.svg') as $svgFile)
-        {
-            $svg->importSvgAsDefinition($svgFile, str_replace('.svg', '', basename($svgFile)));
-        }
     }
 
     // Create a background:
@@ -243,7 +246,44 @@ while($current < count($files))
             )
         );
         $svg->addElement($pattern);
+
+        // Clipart?
+        $r = rand(0, 100);
+
+        // Clouds and grass:
+
+        // Import SVG's as definitions:
+        importDefinitions($svg, glob('./clipart/cloud*.svg'));
+        importDefinitions($svg, glob('./clipart/gras.svg'));
+        $totalClouds = rand(1, 6);
+        for($i = 0; $i < $totalClouds; $i ++) {
+            $svg->addUse('cloud' . rand(1, 3), array(
+                'x' => $GLOBALS['page_width'] * (rand(0, 200) / 100),
+                'y' => $GLOBALS['margin'] + (rand(0, 200))
+            ));
+        }
+        $svg->addUse('gras', array(
+            'x' => 0,
+            'y' => $GLOBALS['page_height'] - 200
+        ));
+
+        // Random butterflies:
+        $totalButterflies = rand(1, 6);
+        importDefinitions($svg, glob('./clipart/butterfly.svg'));
+        for($i = 0; $i < $totalButterflies; $i ++)
+        {
+            $x = $GLOBALS['page_width'] * (rand(0, 200) / 100);
+            $y = $GLOBALS['margin'] + (rand(0, $GLOBALS['page_height']));
+            $svg->addUse('butterfly', array(
+//                'x' => $GLOBALS['page_width'] * (rand(0, 200) / 100),
+//                'y' => $GLOBALS['margin'] + (rand(0, 500)),
+                'transform' => 'translate('.$x.','.$y.'), rotate('.rand(-70, 70).'), scale('.(rand(10, 100) / 100).')',
+                'fill' => randomColor()
+            ), true);
+        }
     }
+
+
 
     // Add the photo's:
     $leftX = (count($pages) % 2 == 1 && $spread) ? $GLOBALS['page_width'] : 0;
@@ -528,10 +568,10 @@ while($current < count($files))
         $svg = new Svg_Document($width, $GLOBALS['page_height']);
 
         // Import SVG's as definitions:
-        foreach(glob('./clipart/*.svg') as $svgFile)
-        {
-            $svg->importSvgAsDefinition($svgFile, str_replace('.svg', '', basename($svgFile)));
-        }
+//        foreach(glob('./clipart/*.svg') as $svgFile)
+//        {
+//            $svg->importSvgAsDefinition($svgFile, str_replace('.svg', '', basename($svgFile)));
+//        }
     }
 }
 
@@ -554,16 +594,16 @@ if(count($pages) % 2 == 0) {
 }*/
 
 // Testing purposes:
-$svg = new Svg_Document($GLOBALS['page_width'], $GLOBALS['page_height']);
+//$svg = new Svg_Document($GLOBALS['page_width'], $GLOBALS['page_height']);
 
 // Set the dropshadow:
-$svg->setDropshadow();
+//$svg->setDropshadow();
 
 // Import SVG's as definitions:
-foreach(glob('./clipart/*.svg') as $svgFile)
-{
-    $svg->importSvgAsDefinition($svgFile, str_replace('.svg', '', basename($svgFile)));
-}
+//foreach(glob('./clipart/*.svg') as $svgFile)
+//{
+//    $svg->importSvgAsDefinition($svgFile, str_replace('.svg', '', basename($svgFile)));
+//}
 
 // Calculate layouts:
 // Layouts are done by drawing imaginary lines:
@@ -571,7 +611,7 @@ foreach(glob('./clipart/*.svg') as $svgFile)
  * @param $svg      Svg_Document
  * @param $options  array
  */
-function generateLayout($svg, $options)
+/*function generateLayout($svg, $options)
 {
 
 }
@@ -580,7 +620,7 @@ generateLayout($svg,
     array(
 
     )
-);
+);*/
 
 /*$rect = new Svg_Element('rect',
     array(
