@@ -63,13 +63,13 @@ class Boom
             $x                  = $currentPosition['x'] * $GLOBALS['page_width'];
             $y                  = $currentPosition['y'] * $GLOBALS['page_height'];
             // Calculate the max width and height, or override them if a scale parameter is set:
-            if(!isset($positions['scale']))
+            if(!isset($currentPosition['scale']))
             {
                 $maxWidth  = $GLOBALS['page_width'] * (($currentPosition['x'] * 2) - (max(0, $currentPosition['x'] - 0.5) * 4)) - ($GLOBALS['margin'] * 2);
                 $maxHeight = $GLOBALS['page_height'] * (($currentPosition['y'] * 2) - (max(0, $currentPosition['y'] - 0.5) * 4)) - ($GLOBALS['margin'] * 2);
             } else {
-                $maxWidth  = ($GLOBALS['page_width'] * $positions['scale'] ) - ($GLOBALS['margin'] * 2);
-                $maxHeight = ($GLOBALS['page_height'] * $positions['scale'] ) - ($GLOBALS['margin'] * 2);
+                $maxWidth  = ($GLOBALS['page_width'] * $currentPosition['scale'] ) - ($GLOBALS['margin'] * 2);
+                $maxHeight = ($GLOBALS['page_height'] * $currentPosition['scale'] ) - ($GLOBALS['margin'] * 2);
             }
             // Set image size:
             if($imgRatio < 1)
