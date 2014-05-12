@@ -52,21 +52,27 @@ class Svg_Fancybox extends Svg_Imagebox
             {
                 case 'tack' :
                     $tack = new SimpleXMLElement('<use />');
-                    $tack->addAttribute('xlink:xlink:href', '#tack1');
-                    $tack->addAttribute('transform', 'translate(' . (($this->attributes['width'] / 2) - 15) . ', -15)');
+                    $tack->addAttribute('xlink:xlink:href', '#tack' . rand(1, 3));
+                    $tack->addAttribute('transform', 'translate(' . (($this->attributes['width'] / 2) - 15) . ', 0)');
                     $this->sxml_append($this->getSvgData(), $tack);
+                    break;
 
-/*
-                    $tack = new Svg_Image('./clipart/tack1.svg',
-                        array(
-                            'width' => 30,
-                            'height' => 30,
-//                            'x' => ($this->attributes['width'] / 2) - 15,
-//                            'y' => -15
-                            'transform' => 'translate(' . (($this->attributes['width'] / 2) - 15) . ', -15)'
-                        )
-                    );
-                    $this->addElement($tack);*/
+                case 'tape' :
+                    $x = rand(0, 10) > 5 ? -50 : $this->attributes['width'] - 100;
+                    // Tape #1
+                    $tape = new SimpleXMLElement('<use />');
+                    $tape->addAttribute('xlink:xlink:href', '#tape' . rand(1, 4));
+                    $tape->addAttribute('transform', 'translate(' . $x . ', -40) rotate(' . rand(-20, 20) . ')');
+                    $this->sxml_append($this->getSvgData(), $tape);
+
+                    $x = $x > 0 ? -50 : $this->attributes['width'] - 100;
+
+                    // Tape #2
+                    $tape = new SimpleXMLElement('<use />');
+                    $tape->addAttribute('xlink:xlink:href', '#tape' . rand(1, 4));
+                    $tape->addAttribute('transform', 'translate(' . ( $x ) . ', ' .
+                            ($this->attributes['height'] - 50) . ') rotate(' . rand(-20, 20) . ')');
+                    $this->sxml_append($this->getSvgData(), $tape);
                     break;
             }
         }

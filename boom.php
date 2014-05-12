@@ -23,8 +23,8 @@ foreach(glob('inc/*.php') as $file)
     require_once($file);
 }
 
-$files = glob('images/*.jpg');
-printf("Found %d images\n", count($files));
+//$files = glob('images/*.jpg');
+//printf("Found %d images\n", count($files));
 
 // Set globals:
 $GLOBALS['page_width'] = 210 * 4;   // A4
@@ -61,23 +61,28 @@ $GLOBALS['colors'] = array(
     'F2E205'
 );
 
+$files = glob('images/*', GLOB_ONLYDIR);
+
 // Iterate through the files and add them to pages:
 $pages = array();
 $current = 0;
+
+$clipArtNr = 0;
+
 while($current < count($files))
 {
-    $random = rand(0, 100) / 100;
-    $count  = 1;
-    foreach($GLOBALS['photo_random_seed'] as $amount => $seed)
-    {
-        if($random >= $seed[0] && $random < $seed[1])
-        {
-            $count = $amount;
-        }
-    }
-    if($current + $count > count($files)) {
+    $filesInDir = glob($files[$current].'/*.[jJ][pP][gG]');
+    $count  = count($filesInDir);
+//    foreach($GLOBALS['photo_random_seed'] as $amount => $seed)
+//    {
+//        if($random >= $seed[0] && $random < $seed[1])
+//        {
+//            $count = $amount;
+//        }
+//    }
+//     if($current + $count > count($files)) {
+    if($current == count($files) - 1) {
         // Last page
-        $count = count($files) - $current;
         $spread = false;
         $lastpage = true;
     } else {
@@ -85,8 +90,8 @@ while($current < count($files))
         $lastpage = false;
     }
     $pages[] = $count;
-    $current += $count;
-    printf("Page %d will get %d photos. (rand=%s)\n", count($pages), $count, number_format($random, 2));
+    $current += 1;
+    printf("Page %d will get %d photos.\n", $current, $count);
 
     // Create new page:
     $width = $spread ? $GLOBALS['page_width'] * 2 : $GLOBALS['page_width'];
@@ -126,10 +131,20 @@ while($current < count($files))
         $svg->addElement($pattern);
 
         // Clipart?
+        $clipArtNr = false;
         $r = rand(0, 100);
 
-        // Clouds and grass:
-        new Clipart_Gras($svg);
+        if($r < 25) {
+            new Clipart_Gras($svg);
+        } elseif($r < 50) {
+            new Clipart_Tacks($svg);
+            $clipArtNr = 1;
+        } elseif($r < 75) {
+            new Clipart_Tape($svg);
+            $clipArtNr = 2;
+        } else {
+            new Clipart_Birds($svg);
+        }
     }
 
     // Add the photo's:
@@ -213,15 +228,25 @@ while($current < count($files))
         $scale = 0.5 + 1 / $count / 2;
 
         $positions[] = array(
-            'file' => $files[$current - $c],
+            'file' => $filesInDir[$c - 1],
             'scale' => $scale,
             'x' => $predefinedPositions[$count][$c - 1]['x'],
             'y' => $predefinedPositions[$count][$c - 1]['y']
         );
     }
-    Boom::magicLayout($positions, $wrap);
+    Boom::magicLayout($positions, $wrap, $clipArtNr);
 
     $svg->addElement($wrap);
+
+    // Add textballoon:
+    $textBox = new Svg_Textbox('Lorem ipsum', array(
+        'font-size' => 24,
+        'font-family' => 'ChalkboardSE-Regular',
+        'x' => $GLOBALS['page_width'], 'y' => $GLOBALS['page_height'] / 2,
+        'border-radius' => 10
+    ));
+
+    $svg->addElement($textBox);
 
     if(count($pages) % 2 == 1) {
         // Add border:

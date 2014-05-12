@@ -62,10 +62,12 @@ class Svg_Textbox extends Svg_Group
             array(
                 'x' => $this->attributes['width'] / 2,
                 'y' => $this->attributes['height'] / 2,
-                'text-anchor' => 'middle'
+                'text-anchor' => 'middle',
+                'font-size' => $attributes['font-size'],
+                'font-family' => $attributes['font-family']
             )
         );
-        $textElement->svg[0] = '(placeholder)';
+        $textElement->svg[0] = $text;
         $this->addElement($textElement);
     }
 }

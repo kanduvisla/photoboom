@@ -47,8 +47,9 @@ class Boom
      *
      * @param $positions array
      * @param $svg Svg_Element
+     * @param $clipArtNr int
      */
-    public static function magicLayout($positions, &$svg)
+    public static function magicLayout($positions, &$svg, $clipArtNr = 0)
     {
         for($i = 0; $i < count($positions); $i ++)
         {
@@ -117,6 +118,12 @@ class Boom
             }
 
             // Add photo:
+            $extra = array(
+                0 => false,
+                1 => 'tack',
+                2 => 'tape'
+            );
+
             $image = new Svg_Fancybox($currentPosition['file'],
                 array(
                     'x' => $x - $imgWidth / 2,
@@ -133,7 +140,7 @@ class Boom
                         )
                     ),
                     'rotation' => rand(-10, 10),
-                    'extra' => 'tack'
+                    'extra' => $extra[$clipArtNr]
                 )
             );
             $svg->addElement($image);
