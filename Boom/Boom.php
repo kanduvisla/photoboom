@@ -1,5 +1,20 @@
 <?php
 
+namespace Boom;
+
+// Cannot be accessed directly:
+if(!defined('BOOM_ROOT')) { die ('naughty boy...'); }
+
+spl_autoload_register(function ($class) {    
+    $filename = BOOM_ROOT . '/' . str_replace('\\', '/', $class) . '.php';
+    if(file_exists($filename)) {
+        require_once($filename);
+    }
+});
+
+// Requirements:
+// require_once(BOOM_ROOT . '/Boom/Items/Base.php');
+
 /**
  * PhotoBoom specific functions
  */
@@ -144,6 +159,39 @@ class Boom
                 )
             );
             $svg->addElement($image);
+        }
+    }
+
+    /**
+     * Return an array with all available items
+     * 
+     * @return array
+     */
+    public static function getItems()
+    {
+        $items = glob(BOOM_ROOT . '/Boom/Items/*', GLOB_ONLYDIR);
+        $arr   = array();
+        foreach($items as $item) {
+            $className = '\\Boom\\Items\\' . basename($item);
+            $class = new $className();
+            /* @var $class \Boom\Items\Base; */
+            $arr[$class->getCode()] = $class;
+        }
+        return $arr;
+    }
+
+    /**
+     * Return a single item
+     * @param String $code
+     * @return \Boom\Items\Base;
+     */
+    public static function getItemByCode($code)
+    {
+        $className = '\\Boom\\Items\\' . ucfirst($code);
+        if(class_exists($className)) {
+            return new $className();
+        } else {
+            return false;
         }
     }
 }
