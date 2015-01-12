@@ -30,14 +30,18 @@
         <?php if(isset($_GET['item'])): ?>
             <?php $_item = Boom::getItemByCode($_GET['item']); ?>
             <?php if($_item !== false): ?>
-                <?php echo $_item->renderSvg(); ?>
+                <div id="svg">
+                    <?php echo $_item->renderSvg(); ?>
+                </div>
+                <aside id="options">
+                    <!-- Options for each item -->
+                    <?php foreach($_item->getOptions() as $_option): ?>
+                        <?php echo \Boom\Options::renderOptionController($_option); ?>
+                    <?php endforeach; ?>
+                </aside>
             <?php endif; ?>
         <?php endif; ?>
     </section>
-    <aside id="options">
-        <!-- Options for each item -->
-        
-    </aside>
     <footer id="main-footer">
         Copyright &copy; <?php echo date('Y'); ?> <a href="http://gielberkers.com">Giel Berkers</a>
     </footer>

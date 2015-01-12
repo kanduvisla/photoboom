@@ -21,6 +21,21 @@ class Duck extends Base
     }
 
     /**
+     * Get the options available
+     * @return array|void
+     */
+    public function getOptions()
+    {
+        return array(
+            'color' => array(
+                'name' => 'Color',
+                'type' => 'color',
+                'default' => 'F9B233'
+            )
+        );
+    }
+
+    /**
      * Render SVG document 
      */
     public function renderSvg()
