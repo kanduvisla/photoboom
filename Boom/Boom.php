@@ -194,4 +194,13 @@ class Boom
             return false;
         }
     }
+
+    /**
+     * Get options from the request parameter
+     * @return array
+     */
+    public static function getRequestOptions()
+    {
+        return isset($_GET['option']) ? $_GET['option'] : array();
+    }
 }

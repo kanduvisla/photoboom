@@ -17,8 +17,8 @@ interface Base_Interface
 {
     public function getCode();
     public function getName();
-    public function getOptions();
-    public function renderSvg();
+    public function getOptions(array $defaults);
+    public function renderSvg(array $options);
 }
 
 /**
@@ -61,9 +61,10 @@ abstract class Base implements Base_Interface
 
     /**
      * Get the options
+     * @param array $defaults
      * @return array
      */
-    public function getOptions()
+    public function getOptions(array $defaults = array())
     {
         // Stub
         return array();
@@ -71,9 +72,10 @@ abstract class Base implements Base_Interface
 
     /**
      * Render the SVG data
+     * @param array $options
      * @return String
      */
-    abstract public function renderSvg();
+    abstract public function renderSvg(array $options = array());
 
     /**
      * Initialisation stub

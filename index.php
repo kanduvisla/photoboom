@@ -31,13 +31,19 @@
             <?php $_item = Boom::getItemByCode($_GET['item']); ?>
             <?php if($_item !== false): ?>
                 <div id="svg">
-                    <?php echo $_item->renderSvg(); ?>
+                    <?php echo $_item->renderSvg(Boom::getRequestOptions()); ?>
                 </div>
                 <aside id="options">
-                    <!-- Options for each item -->
-                    <?php foreach($_item->getOptions() as $_option): ?>
-                        <?php echo \Boom\Options::renderOptionController($_option); ?>
-                    <?php endforeach; ?>
+                    <form action="index.php">
+                        <input type="hidden" name="item" value="<?php echo $_item->getCode(); ?>"/>
+                        <!-- Options for each item -->
+                        <?php foreach($_item->getOptions() as $_option): ?>
+                            <?php echo \Boom\Options::renderOptionController($_option); ?>
+                        <?php endforeach; ?>
+                        <fieldset>
+                            <input type="submit" value="submit"/>
+                        </fieldset>
+                    </form>
                 </aside>
             <?php endif; ?>
         <?php endif; ?>

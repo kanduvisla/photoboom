@@ -18,23 +18,32 @@ class Options
      */
     public static function renderOptionController($option)
     {
-        return self::renderInputField($option['type'], $option['name'], $option['default']);
+        // Check if there is an option set in the request:
+        $requestOptions = Boom::getRequestOptions();
+        $value = isset($requestOptions[$option['name']]) ? $requestOptions[$option['name']] : $option['default'];
+        switch($option['type'])
+        {
+            case 'color' :
+                return self::renderInputField($option['label'], $option['name'], $value);
+                break;
+        }
+        return '';
     }
 
     /**
      * Render input field
-     * @param $type
+     * @param $label
      * @param $name
-     * @param $default
+     * @param $value
      * @return string
      */
-    private static function renderInputField($type, $name, $default)
+    private static function renderInputField($label, $name, $value)
     {
         return sprintf('
             <fieldset>
                 <label for="%2$s">%1$s</label>
-                <input type="text" id="%2$s"/>
-            </fieldset>   
-        ');
+                <input type="text" id="%2$s" name="option[%2$s]" value="%3$s"/>
+            </fieldset>
+        ', $label, $name, $value);
     }
 }
