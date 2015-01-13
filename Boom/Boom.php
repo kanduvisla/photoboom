@@ -48,16 +48,6 @@ class Boom
     }
 
     /**
-     * Return a random color
-     *
-     * @return string
-     */
-    public static function randomColor()
-    {
-        return '#' . $GLOBALS['colors'][rand(0, count($GLOBALS['colors'])-1)];
-    }
-
-    /**
      * Create a layout according to an image array
      *
      * @param $positions array

@@ -18,7 +18,6 @@ interface Base_Interface
     public function getCode();
     public function getName();
     public function getOptions(array $defaults);
-    public function renderSvg(array $options);
 }
 
 /**

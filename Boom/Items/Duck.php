@@ -9,7 +9,9 @@
  
 namespace Boom\Items;
 
-class Duck extends Base
+use Boom\Utils\Color;
+
+class Duck extends SvgFile
 {
     /**
      * Initialization
@@ -36,52 +38,16 @@ class Duck extends Base
             )
         );
     }
-
+    
     /**
-     * Render SVG document 
-     * @param array $options
-     * @return bool|string
-     */
-    public function renderSvg(array $options = array())
-    {
-        $file = BOOM_ROOT . '/Boom/Items/' . $this->name . '/svg/duck.svg';
-        if(file_exists($file))
-        {
-            $svgData = file_get_contents($file);
-            $svgData = $this->parseOptionsOnSvg($svgData, $options);
-            return $svgData;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Parse options on SVG data
-     * @param string $svgData
-     * @param array $options
-     * @return string
-     */
-    protected function parseOptionsOnSvg($svgData, array $options = array())
-    {
-        $options = array_merge($this->getDefaultOptions(), $options);
-        foreach($options as $key => $value)
-        {
-            $svgData = str_replace('{{' . $key . '}}', $value, $svgData);
-        }
-        return $svgData;
-    }
-
-    /**
-     * Get default options
+     * Way of changing options prior before rendering the SVG
+     * @param $options
      * @return array
      */
-    protected function getDefaultOptions()
+    protected function manipulateOptionsBeforeRendering(array $options = array())
     {
-        $options = array();
-        foreach($this->getOptions() as $option)
-        {
-            $options[$option['name']] = $option['default'];
-        }
+        $options['dark-color'] = Color::darken($options['color'], 15);
         return $options;
     }
+    
 }
