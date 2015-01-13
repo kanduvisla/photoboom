@@ -46,7 +46,7 @@ class Duck extends SvgFile
      */
     protected function manipulateOptionsBeforeRendering(array $options = array())
     {
-        $options['dark-color'] = Color::darken($options['color'], 15);
+        $options['dark-color'] = Color::darken($options['color'], 10);
         return $options;
     }
     
