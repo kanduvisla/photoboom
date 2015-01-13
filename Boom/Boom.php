@@ -163,9 +163,11 @@ class Boom
         $arr   = array();
         foreach($items as $item) {
             $className = '\\Boom\\Items\\' . basename($item);
-            $class = new $className();
-            /* @var $class \Boom\Items\Base; */
-            $arr[$class->getCode()] = $class;
+            if(class_exists($className)) {
+                $class = new $className();
+                /* @var $class \Boom\Items\Base; */
+                $arr[$class->getCode()] = $class;
+            }
         }
         return $arr;
     }
