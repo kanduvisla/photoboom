@@ -34,7 +34,7 @@ class Bee extends SvgFile
                 'label' => 'Color',
                 'name' => 'color',
                 'type' => 'color',
-                'default' => '#F9B233'
+                'default' => '#F4C227'
             )
         );
     }
