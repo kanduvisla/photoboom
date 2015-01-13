@@ -43,6 +43,25 @@ abstract class SvgFile extends Base
         {
             $svgData = str_replace('{{' . $key . '}}', $value, $svgData);
         }
+        // Check for if-statements:
+        preg_match_all('/\{\{if (.*)\}\}(.*)\{\{\/if\}\}/mUis', $svgData, $matches);
+        if(count($matches[1]) > 0)
+        {
+            // We have matches!
+            foreach($matches[1] as $index => $match)
+            {
+                $operation = explode('=', $match);
+                if(isset($options[$operation[0]]) && $options[$operation[0]] == $operation[1])
+                {
+                    // Replace if-statement with emptyness:
+                    $replacement = str_replace(array('{{if ' . $match . '}}', '{{/if}}'), '', $matches[0][$index]);
+                    $svgData = str_replace($matches[0][$index], $replacement, $svgData);
+                } else {
+                    // Replace everything with emptyness:
+                    $svgData = str_replace($matches[0][$index], '', $svgData);
+                }
+            }
+        }
         return $svgData;
     }
 

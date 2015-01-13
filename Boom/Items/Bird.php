@@ -41,6 +41,16 @@ class Bird extends SvgFile
                 'name' => 'color-eye',
                 'type' => 'color',
                 'default' => '#662483'
+            ),
+            array(
+                'label' => 'Accessories',
+                'name' => 'accessories',
+                'type' => 'dropdown',
+                'default' => 'none',
+                'values' => array(
+                    'none',
+                    'doctor'
+                )
             )
         );
     }

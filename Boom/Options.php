@@ -26,6 +26,9 @@ class Options
             case 'color' :
                 return self::renderInputField($option['label'], $option['name'], $value);
                 break;
+            case 'dropdown' :
+                return self::renderDropdownField($option['label'], $option['name'], $value, $values);
+                break;
         }
         return '';
     }
@@ -45,5 +48,25 @@ class Options
                 <input type="text" id="%2$s" name="option[%2$s]" value="%3$s"/>
             </fieldset>
         ', $label, $name, $value);
+    }
+    
+    /**
+     * Render input field
+     * @param $label
+     * @param $name
+     * @param $value
+     * @param array $values
+     * @return string
+     */
+    private static function renderDropdownField($label, $name, $value, $values)
+    {
+        return sprintf('
+            <fieldset>
+                <label for="%2$s">%1$s</label>
+                <select id="%2$s" name="option[%2$s]">
+                    %3$s
+                </select>
+            </fieldset>
+        ', $label, $name, $options); // TODO
     }
 }
