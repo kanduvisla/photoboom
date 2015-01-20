@@ -27,7 +27,7 @@ class Options
                 return self::renderInputField($option['label'], $option['name'], $value);
                 break;
             case 'dropdown' :
-                return self::renderDropdownField($option['label'], $option['name'], $value, $values);
+                return self::renderDropdownField($option['label'], $option['name'], $value, $option['values']);
                 break;
         }
         return '';
@@ -60,6 +60,15 @@ class Options
      */
     private static function renderDropdownField($label, $name, $value, $values)
     {
+        $options = '';
+        foreach($values as $val)
+        {
+            $options .= sprintf('<option value="%1$s" %3$s>%2$s</option>', 
+                $val, 
+                ucfirst($val),
+                ($val == $value ? 'selected="selected"' : '')
+            );
+        }
         return sprintf('
             <fieldset>
                 <label for="%2$s">%1$s</label>
@@ -67,6 +76,6 @@ class Options
                     %3$s
                 </select>
             </fieldset>
-        ', $label, $name, $options); // TODO
+        ', $label, $name, $options);
     }
 }
