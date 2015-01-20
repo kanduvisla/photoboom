@@ -32,6 +32,27 @@ body {
 	background: #fff;
 	padding: 10px;
 	z-index: 2;
+	li {
+		list-style-type: none;
+		margin-bottom: 5px;
+		&:last-of-type {
+			margin-bottom: 0;
+		}
+	}
+	a {
+		display: block;
+		text-decoration: none;
+		padding: 5px;
+		border: 1px solid #eee;
+		border-bottom-color: #ccc;
+		border-right-color: #ccc;
+		color: #000;
+		&:active, &.active {
+			border: 1px solid #ccc;
+			border-bottom-color: #eee;
+			border-right-color: #eee;			
+		}
+	}
 }
 
 #preview {

@@ -20,7 +20,8 @@
         <ul>
         <?php foreach($_items as $_item): ?>
             <li>
-                <a href="index.php?item=<?php echo $_item->getCode(); ?>">
+                <a href="index.php?item=<?php echo $_item->getCode(); ?>" <?php 
+                    if($_item->getCode() == $_GET['item']): ?>class="active"<?php endif; ?>>
                     <?php echo $_item->getName(); ?>
                 </a>
             </li>
