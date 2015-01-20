@@ -195,4 +195,29 @@ class Boom
     {
         return isset($_GET['option']) ? $_GET['option'] : array();
     }
+
+    /**
+     * Check for download
+     */
+    public static function checkForDownload()
+    {
+        if(isset($_GET['save']))
+        {
+            $item = Boom::getItemByCode($_GET['item']);
+            
+            $str = $item->renderSvg(Boom::getRequestOptions());
+            
+            header('Content-Transfer-Encoding: binary');  // For Gecko browsers mainly
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s', time()) . ' GMT');
+            header('Accept-Ranges: bytes');  // For download resume
+            header('Content-Length: ' . strlen($str));  // File size
+            header('Content-Encoding: none');
+            header('Content-Type: application/svg');  // Change this mime type if the file is not PDF
+            header('Content-Disposition: attachment; filename=' . $_GET['item'] . '.svg');  // Make the browser display the Save As dialog
+            
+            echo $str;
+            
+            die;
+        }
+    }
 }

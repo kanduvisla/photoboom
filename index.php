@@ -3,6 +3,9 @@
     require_once('./Boom/Boom.php');
 
     use Boom\Boom;
+
+    // Check for download in the header:
+    Boom::checkForDownload();
 ?>
 <html>
 <head>
@@ -44,7 +47,8 @@
                             <?php echo \Boom\Options::renderOptionController($_option); ?>
                         <?php endforeach; ?>
                         <fieldset>
-                            <input type="submit" value="submit"/>
+                            <input type="submit" class="submit" value="submit"/>
+                            <input type="submit" class="save" value="save" name="save"/>
                         </fieldset>
                     </form>
                 </aside>

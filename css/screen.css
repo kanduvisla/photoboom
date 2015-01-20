@@ -61,6 +61,16 @@ body {
   top: 10px;
   padding: 10px;
   background: #fff; }
+  #options fieldset {
+    border: none;
+    margin-bottom: 5px; }
+    #options fieldset:last-of-type {
+      margin-bottom: 0; }
+  #options label {
+    display: block; }
+  #options input[type=text], #options select {
+    padding: 5px;
+    width: 100%; }
 
 #main-footer {
   position: absolute;
