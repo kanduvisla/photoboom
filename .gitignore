@@ -2,3 +2,4 @@
 /images/
 /*.svg
 node_modules/
+.sass-cache/

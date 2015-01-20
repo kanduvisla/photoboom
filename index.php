@@ -5,7 +5,9 @@
     use Boom\Boom;
 ?>
 <html>
-<head></head>
+<head>
+    <link rel="stylesheet" href="css/screen.css"/>
+</head>
 <body>
 <div id="page">
     <header id="main-header">
@@ -50,8 +52,8 @@
     </section>
     <footer id="main-footer">
         Copyright &copy; <?php echo date('Y'); ?> <a href="http://gielberkers.com">Giel Berkers</a>
-    </footer>
-    
+    </footer>    
 </div>
+<script type="text/javascript" src="js/global.js"></script>
 </body>
 </html>
