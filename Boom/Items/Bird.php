@@ -49,7 +49,9 @@ class Bird extends SvgFile
                 'default' => 'none',
                 'values' => array(
                     'none',
-                    'doctor'
+                    'doctor',
+                    'halo',
+                    'black_pete'
                 )
             )
         );

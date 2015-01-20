@@ -65,7 +65,7 @@ class Options
         {
             $options .= sprintf('<option value="%1$s" %3$s>%2$s</option>', 
                 $val, 
-                ucfirst($val),
+                ucfirst(str_replace('_', ' ', $val)),
                 ($val == $value ? 'selected="selected"' : '')
             );
         }
