@@ -82,6 +82,28 @@ class Background extends Base implements Base_Interface
     public function renderSvg(array $options = array())
     {
         $this->svg = new Document($options['width'], $options['height']);
+        $this->createSvg($options);
+        $this->svg->parse();
         return $this->svg->getSvgData()->asXML();
-    }    
+    }
+
+    /**
+     * Function that does all the magic
+     * @param array $options
+     */
+    private function createSvg(array $options = array())
+    {
+        // Create a fill:
+        $fill = new Element('rect',
+            array(
+                'width' => $options['width'],
+                'height' => $options['height'],
+                'stroke' => 'none',
+                'fill' => $options['color1']
+            )
+        );
+        $this->svg->addElement($fill);
+        
+        
+    }
 }

@@ -59,7 +59,7 @@ class Document extends Element
      *
      * @param $fileName
      */
-    public function parse($fileName)
+    public function parse($fileName = null)
     {
         // Add definitions first:
         $this->sxml_append($this->svg, $this->defs);
@@ -68,8 +68,11 @@ class Document extends Element
         {
             $this->sxml_append($this->svg, $element);
         }
-        // Parse the SVG data:
-        $this->svg->asXML($fileName);
+        if($fileName != null)
+        {
+            // Parse the SVG data:
+            $this->svg->asXML($fileName);
+        }
     }
 
     /**
