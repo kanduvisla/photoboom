@@ -71,6 +71,15 @@ class Background extends Base implements Base_Interface
                     'dots'
                 )
             ),
+            'axis' => array(
+                'label' => 'Axis',
+                'name' => 'axis',
+                'type' => 'dropdown',
+                'default' => 'x',
+                'values' => array(
+                    'x', 'y'
+                )
+            ),
             'size' => array(
                 'label' => 'Size',
                 'name' => 'size',
@@ -128,89 +137,87 @@ class Background extends Base implements Base_Interface
         {
             case 'lines' :
                 $i = 0;
-                $c = count($options['colors']);
-                if($this->attributes['xAxis'])
+                if($options['axis'] == 'x')
                 {
-                    for($x = 0; $x < $this->attributes['width']; $x+= ($this->attributes['size'] + $this->attributes['offset']))
+                    for($x = 0; $x < $options['width']; $x+= ($options['size'] + $options['offset']))
                     {
-                        $line = new Svg_Element('line',
+                        $line = new Element('line',
                             array(
                                 'x1' => $x,
                                 'y1' => 0,
                                 'x2' => $x,
-                                'y2' => $this->attributes['height'],
-                                'stroke-width' => $this->attributes['size'],
-                                'stroke' => $this->attributes['colors'][$i / 1 % $c],
-                                'stroke-opacity' => $this->attributes['opacity']
+                                'y2' => $options['height'],
+                                'stroke-width' => $options['size'],
+                                'stroke' => $options['color2'],
+                                'stroke-opacity' => $options['opacity']
                             )
                         );
-                        $this->addElement($line);
+                        $this->svg->addElement($line);
                         $i ++;
                     }
                 }
-                if($this->attributes['yAxis'])
+                if($options['axis'] == 'y')
                 {
-                    for($y = 0; $y < $this->attributes['height']; $y += ($this->attributes['size'] + $this->attributes['offset']))
+                    for($y = 0; $y < $options['height']; $y += ($options['size'] + $options['offset']))
                     {
-                        $line = new Svg_Element('line',
+                        $line = new Element('line',
                             array(
                                 'x1' => 0,
                                 'y1' => $y,
-                                'x2' => $this->attributes['width'],
+                                'x2' => $options['width'],
                                 'y2' => $y,
-                                'stroke-width' => $this->attributes['size'],
-                                'stroke' => $this->attributes['colors'][$i / 1 % $c],
-                                'stroke-opacity' => $this->attributes['opacity']
+                                'stroke-width' => $options['size'],
+                                'stroke' => $options['color2'],
+                                'stroke-opacity' => $options['opacity']
                             )
                         );
-                        $this->addElement($line);
+                        $this->svg->addElement($line);
                         $i ++;
                     }
                 }
                 break;
             case 'lines45' :
                 $i = 0;
-                $c = count($this->attributes['colors']);
-                // $this->attributes['offset'] *= 1; //($this->attributes['size'] / 5); // because of the 45 degree angle
-                $this->attributes['offset'] *= 1.5;
-                $this->attributes['offset'] += $this->attributes['size'] / 2.5;
-                if($this->attributes['yAxis'])
+                // $options['offset'] *= 1; //($options['size'] / 5); // because of the 45 degree angle
+                $options['offset'] *= 1.5;
+                $options['offset'] += $options['size'] / 2.5;
+                if($options['axis'] == 'y')
                 {
-                    for($y=0; $y < $this->attributes['height'] + $this->attributes['width']; $y += ($this->attributes['size'] + $this->attributes['offset']))
+                    for($y=0; $y < $options['height'] + $options['width']; $y += ($options['size'] + $options['offset']))
                     {
                         // Y-Axis
-                        $line = new Svg_Element('line',
+                        $line = new Element('line',
                             array(
                                 'x1' => 0,
                                 'y1' => $y,
                                 'x2' => $y,
                                 'y2' => 0,
-                                'stroke-width' => $this->attributes['size'],
-                                'stroke' => $this->attributes['colors'][$i / 1 % $c],
-                                'stroke-opacity' => $this->attributes['opacity']
+                                'stroke-width' => $options['size'],
+                                'stroke' => $options['color2'],
+                                'stroke-opacity' => $options['opacity']
                             )
                         );
-                        $this->addElement($line);
+                        $this->svg->addElement($line);
                         $i ++;
                     }
                 }
-                if($this->attributes['xAxis'])
+                if($options['axis'] == 'x')
                 {
-                    for($y=$this->attributes['height']; $y > -$this->attributes['width']; $y -= ($this->attributes['size'] + $this->attributes['offset']))
+                    for($y=$options['height']; $y > -$options['width']; $y -= ($options['size'] + $options['offset']))
                     {
                         // X-Axis
-                        $line = new Svg_Element('line',
+                        $line = new Element('line',
                             array(
                                 'x1' => 0,
                                 'y1' => $y,
-                                'x2' => ($this->attributes['height'] - $y),
-                                'y2' => $this->attributes['height'],
-                                'stroke-width' => $this->attributes['size'],
-                                'stroke' => $this->attributes['colors'][$i / 1 % $c],
-                                'stroke-opacity' => $this->attributes['opacity']
+                                'x2' => ($options['height'] - $y),
+                                'y2' => $options['height'],
+                                'stroke-width' => $options['size'],
+                                'stroke' => $options['color2'],
+                                'stroke-opacity' => $options['opacity']
                             )
                         );
-                        $this->addElement($line);
+                        $this->svg->addElement($line);
                         $i ++;
                     }
                 }
