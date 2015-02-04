@@ -29,6 +29,10 @@ class Options
             case 'dropdown' :
                 return self::renderDropdownField($option['label'], $option['name'], $value, $option['values']);
                 break;
+            case 'checkbox' :
+                $value = isset($requestOptions[$option['name']]) ? true : false;
+                return self::renderCheckboxField($option['label'], $option['name'], $value, $option['values']);
+                break;
             default :
                 return self::renderInputField($option['label'], $option['name'], $value);
                 break;
@@ -97,4 +101,21 @@ class Options
             </fieldset>
         ', $label, $name, $options);
     }
+    
+    /**
+     * Render input field
+     * @param $label
+     * @param $name
+     * @param $value
+     * @return string
+     */
+    private static function renderCheckboxField($label, $name, $value)
+    {
+        return sprintf('
+            <fieldset>
+                <label for="%2$s">%1$s</label>
+                <input type="checkbox" id="%2$s" name="option[%2$s]" %3$s/>
+            </fieldset>
+        ', $label, $name, ($value == true ? 'checked="checked"' : ''));
+    }    
 }

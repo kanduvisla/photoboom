@@ -98,6 +98,12 @@ class Background extends Base implements Base_Interface
                 'type' => 'text',
                 'default' => 0.5
             ),
+            'radial' => array(
+                'label' => 'Radial',
+                'name' => 'radial',
+                'type' => 'checkbox',
+                'default' => false
+            )
         );
     }
     
@@ -122,16 +128,29 @@ class Background extends Base implements Base_Interface
     private function createSvg(array $options = array())
     {
         // Create a fill:
-        $fill = new Element('rect',
-            array(
-                'width' => $options['width'],
-                'height' => $options['height'],
-                'stroke' => 'none',
-                'fill' => $options['color1']
-            )
-        );
-        $this->svg->addElement($fill);
-        
+        if(!$options['radial'])
+        {
+            $fill = new Element('rect',
+                array(
+                    'width' => $options['width'],
+                    'height' => $options['height'],
+                    'stroke' => 'none',
+                    'fill' => $options['color1']
+                )
+            );
+            $this->svg->addElement($fill);
+        } else {
+            
+            $fill = new Element('rect',
+                array(
+                    'width' => $options['width'],
+                    'height' => $options['height'],
+                    'stroke' => 'none',
+                    'fill' => $options['color1']
+                )
+            );
+            $this->svg->addElement($fill);
+        }
         // Create a pattern:
         switch($options['type'])
         {
