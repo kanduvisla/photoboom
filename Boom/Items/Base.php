@@ -80,4 +80,29 @@ abstract class Base implements Base_Interface
      * Initialisation stub
      */
     abstract protected function init();
+    
+    /**
+     * Way of changing options prior before rendering the SVG
+     * @param $options
+     * @return array
+     */
+    protected function manipulateOptionsBeforeRendering(array $options = array())
+    {
+        // Stub
+        return $options;
+    }
+
+    /**
+     * Get default options
+     * @return array
+     */
+    protected function getDefaultOptions()
+    {
+        $options = array();
+        foreach($this->getOptions() as $option)
+        {
+            $options[$option['name']] = $option['default'];
+        }
+        return $options;
+    }
 }

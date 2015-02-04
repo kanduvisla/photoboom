@@ -64,29 +64,4 @@ abstract class SvgFile extends Base
         }
         return $svgData;
     }
-
-    /**
-     * Way of changing options prior before rendering the SVG
-     * @param $options
-     * @return array
-     */
-    protected function manipulateOptionsBeforeRendering(array $options = array())
-    {
-        // Stub
-        return $options;
-    }
-
-    /**
-     * Get default options
-     * @return array
-     */
-    protected function getDefaultOptions()
-    {
-        $options = array();
-        foreach($this->getOptions() as $option)
-        {
-            $options[$option['name']] = $option['default'];
-        }
-        return $options;
-    }    
 }
