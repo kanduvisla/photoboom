@@ -15,7 +15,7 @@ class Element
      */
     public function __construct($type, $attributes = array())
     {
-        $this->svg = new SimpleXMLElement('<'.$type.' />');
+        $this->svg = new \SimpleXMLElement('<'.$type.' />');
         $this->mergeAttributes($attributes);
         foreach($this->attributes as $key => $value)
         {
@@ -26,7 +26,7 @@ class Element
     /**
      * Get the SVG Elements' XML Data
      *
-     * @return SimpleXMLElement
+     * @return \SimpleXMLElement
      */
     public function getSvgData()
     {
@@ -36,7 +36,7 @@ class Element
     /**
      * Add a SVG Element
      *
-     * @param Svg_Element $element
+     * @param Element $element
      */
     public function addElement($element)
     {
@@ -46,10 +46,10 @@ class Element
     /**
      * Append one SimpleXMLElement to another
      *
-     * @param SimpleXMLElement $to
-     * @param SimpleXMLElement $from
+     * @param \SimpleXMLElement $to
+     * @param \SimpleXMLElement $from
      */
-    protected function sxml_append(SimpleXMLElement $to, SimpleXMLElement $from) {
+    protected function sxml_append(\SimpleXMLElement $to, \SimpleXMLElement $from) {
         $toDom = dom_import_simplexml($to);
         $fromDom = dom_import_simplexml($from);
         $toDom->appendChild($toDom->ownerDocument->importNode($fromDom, true));
@@ -119,7 +119,7 @@ class Element
                     if(isset($stroke['dasharray'])) { $strokeAttributes['stroke-dasharray'] = $stroke['dasharray']; }
                     if(isset($stroke['linecap']))   { $strokeAttributes['stroke-linecap'] = $stroke['linecap']; }
 
-                    $strokeRect = new Svg_Element('rect', $strokeAttributes);
+                    $strokeRect = new Element('rect', $strokeAttributes);
                     $this->addElement($strokeRect);
                 }
             }

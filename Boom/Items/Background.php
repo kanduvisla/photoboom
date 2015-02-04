@@ -9,8 +9,16 @@
 
 namespace Boom\Items;
 
+use Boom\Svg\Document;
+use Boom\Svg\Element;
+
 class Background extends Base implements Base_Interface
 {
+    /**
+     * @var Document
+     */
+    protected $svg;
+    
     /**
      * Initialization
      */
@@ -73,14 +81,7 @@ class Background extends Base implements Base_Interface
      */
     public function renderSvg(array $options = array())
     {
-        $file = BOOM_ROOT . '/Boom/Items/' . $this->name . '/svg/' . $this->code . '.svg';
-        if(file_exists($file))
-        {
-            $svgData = file_get_contents($file);
-            $svgData = $this->parseOptionsOnSvg($svgData, $options);
-            return $svgData;
-        } else {
-            return false;
-        }
+        $this->svg = new Document($options['width'], $options['height']);
+        return $this->svg->getSvgData()->asXML();
     }    
 }
