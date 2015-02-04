@@ -71,17 +71,23 @@ class Background extends Base implements Base_Interface
                     'dots'
                 )
             ),
-            'param1' => array(
-                'label' => 'Parameter #1',
-                'name' => 'param1',
+            'size' => array(
+                'label' => 'Size',
+                'name' => 'size',
                 'type' => 'text',
                 'default' => 10
             ),
-            'param2' => array(
-                'label' => 'Parameter #2',
-                'name' => 'param2',
+            'offset' => array(
+                'label' => 'Offset',
+                'name' => 'offset',
                 'type' => 'text',
                 'default' => 30
+            ),
+            'opacity' => array(
+                'label' => 'Opacity',
+                'name' => 'opacity',
+                'type' => 'text',
+                'default' => 0.5
             ),
         );
     }
@@ -212,8 +218,6 @@ class Background extends Base implements Base_Interface
             case 'dots' :
                 $i = 0;
                 $j = 0;
-                $options['size'] = $options['param1'];
-                $options['offset'] = $options['param2'];
                 for($y = 0; $y < $options['height']; $y+= (($options['size'] + $options['offset']) * 0.85 ))
                 {
                     $j++;
@@ -226,7 +230,7 @@ class Background extends Base implements Base_Interface
                                 'cy' => $y,
                                 'stroke' => 'none',
                                 'fill' => $options['color2'],
-                                // 'fill-opacity' => $options['opacity'],
+                                'fill-opacity' => $options['opacity'],
                                 'r' => $options['size'] / 2
                             )
                         );
