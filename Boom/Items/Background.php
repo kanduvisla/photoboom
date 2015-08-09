@@ -11,6 +11,7 @@ namespace Boom\Items;
 
 use Boom\Svg\Document;
 use Boom\Svg\Element;
+use Boom\Utils\Color;
 
 class Background extends Base implements Base_Interface
 {
@@ -140,13 +141,42 @@ class Background extends Base implements Base_Interface
             );
             $this->svg->addElement($fill);
         } else {
-            
+            $gradient = new Element(
+                'radialGradient',
+                array(
+                    'id' => 'grad1',
+                    'cx' => '50%',
+                    'cy' => '50%',
+                    'r' => '50%',
+                    'fx' => '50%',
+                    'fy' => '50%'
+                )
+            );
+            $gradient->addElement(
+                new Element(
+                    'stop',
+                    array(
+                        'offset' => '0%',
+                        'style' => 'stop-color:' . $options['color1']
+                    )
+                )
+            );
+            $gradient->addElement(
+                new Element(
+                    'stop',
+                    array(
+                        'offset' => '100%',
+                        'style' => 'stop-color:' . Color::darken($options['color1'], 10)
+                    )
+                )
+            );
+            $this->svg->addDefinition($gradient);
             $fill = new Element('rect',
                 array(
                     'width' => $options['width'],
                     'height' => $options['height'],
                     'stroke' => 'none',
-                    'fill' => $options['color1']
+                    'fill' => 'url(#grad1)'
                 )
             );
             $this->svg->addElement($fill);
