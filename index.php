@@ -48,7 +48,8 @@
                         <?php endforeach; ?>
                         <fieldset>
                             <input type="submit" class="submit" value="submit"/>
-                            <input type="submit" class="save" value="save" name="save"/>
+                            <input type="submit" class="save" value="save svg" name="save"/>
+                            <input type="submit" class="save" value="save png" name="save_png"/>
                         </fieldset>
                     </form>
                 </aside>

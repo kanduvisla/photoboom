@@ -213,11 +213,33 @@ class Boom
             header('Content-Length: ' . strlen($str));  // File size
             header('Content-Encoding: none');
             header('Content-Type: application/svg');  // Change this mime type if the file is not PDF
-            header('Content-Disposition: attachment; filename=' . $_GET['item'] . '.svg');  // Make the browser display the Save As dialog
+            header('Content-Disposition: attachment; filename=' . $_GET['item'] . '-' . time() . '.svg');  // Make the browser display the Save As dialog
             
             echo $str;
             
             die;
+        }
+        if(isset($_GET['save_png']))
+        {
+            $item = Boom::getItemByCode($_GET['item']);
+            $str = $item->renderSvg(Boom::getRequestOptions());
+            $fileName = $_GET['item'] . '-' . time();
+            // Save SVG:
+            file_put_contents(sys_get_temp_dir() . '/' . $fileName . '.svg', $str);
+            // Create PNG:
+            $options = self::getRequestOptions();
+
+            shell_exec('qlmanage -t -s 2100 -o ' . sys_get_temp_dir() . ' ' . sys_get_temp_dir() . '/' . $fileName . '.svg');
+            // Download file:
+            $file = sys_get_temp_dir() . '/' . $fileName . '.svg.png';
+            header('Content-Transfer-Encoding: binary');  // For Gecko browsers mainly
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s', time()) . ' GMT');
+            header('Accept-Ranges: bytes');  // For download resume
+            header('Content-Length: ' . filesize($file));  // File size
+            header('Content-Encoding: none');
+            header('Content-Type: image/png');  // Change this mime type if the file is not PDF
+            header('Content-Disposition: attachment; filename=' . $_GET['item'] . '-' . time() . '.png');  // Make the browser display the Save As dialog
+            readfile($file);
         }
     }
 }
