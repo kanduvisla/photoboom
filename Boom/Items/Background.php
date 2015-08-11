@@ -69,7 +69,8 @@ class Background extends Base implements Base_Interface
                 'values' => array(
                     'lines',
                     'lines45',
-                    'dots'
+                    'dots',
+                    'stars'
                 )
             ),
             'axis' => array(
@@ -271,27 +272,60 @@ class Background extends Base implements Base_Interface
                     }
                 }
                 break;
-            case 'dots' :
+            case 'dots':
+            case 'stars':
                 $i = 0;
                 $j = 0;
+                $pointCount = 5;
+                $piPart = (pi() / $pointCount);
+                $innerRadius = $options['size'] / 2;
+                $outerRadius = $options['size'];
                 for($y = 0; $y < $options['height']; $y+= (($options['size'] + $options['offset']) * 0.85 ))
                 {
                     $j++;
                     for($x = 0; $x < $options['width'] + ($options['size'] + $options['offset']); $x+= ($options['size'] + $options['offset']))
                     {
                         $offset = ($options['offset'] + $options['size']) / 2;
-                        $circle = new Element('circle',
-                            array(
-                                'cx' => $x - (($j%2) * $offset),
-                                'cy' => $y,
-                                'stroke' => 'none',
-                                'fill' => $options['color2'],
-                                'fill-opacity' => $options['opacity'],
-                                'r' => $options['size'] / 2
-                            )
-                        );
+                        if ($options['type'] === 'dots') {
+                            $element = new Element('circle',
+                                array(
+                                    'cx' => $x - (($j%2) * $offset),
+                                    'cy' => $y,
+                                    'stroke' => 'none',
+                                    'fill' => $options['color2'],
+                                    'fill-opacity' => $options['opacity'],
+                                    'r' => $options['size'] / 2
+                                )
+                            );
+                        }
+                        if ($options['type'] === 'stars') {
+                            $starX = $x - (($j%2) * $offset);
+                            $starY = $y;
+                            $points = array();
+                            // $piOffset = pi() / rand(1, 30);
 
-                        $this->svg->addElement($circle);
+                            $piOffset = pi();
+                            for($i = 0; $i < $pointCount * 2; $i+=2)
+                            {
+                                $points[] = ($starX + (sin($piOffset + $piPart * $i) * $outerRadius)) . ',' .
+                                    ($starY + (cos($piOffset + $piPart * $i)) * $outerRadius);
+                                $points[] = ($starX + (sin($piOffset + $piPart * ($i + 1)) * $innerRadius)) . ',' .
+                                    ($starY + (cos($piOffset + $piPart * ($i + 1))) * $innerRadius);
+                            }
+                            $element = new Element('polygon',
+                                array(
+                                    'cx' => $starX,
+                                    'cy' => $starY,
+                                    'stroke' => 'black',
+                                    'fill' => 'none',
+//                                    'fill' => $options['color2'],
+//                                    'fill-opacity' => $options['opacity'],
+                                    // 'r' => $options['size'] / 2
+                                    'points' => implode(' ', $points)
+                                )
+                            );
+                        }
+                        $this->svg->addElement($element);
                         $i ++;
                     }
                 }
