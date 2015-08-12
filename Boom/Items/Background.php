@@ -316,10 +316,10 @@ class Background extends Base implements Base_Interface
                                 array(
                                     'cx' => $starX,
                                     'cy' => $starY,
-                                    'stroke' => 'black',
-                                    'fill' => 'none',
-//                                    'fill' => $options['color2'],
-//                                    'fill-opacity' => $options['opacity'],
+                                    'stroke' => 'none',
+//                                    'fill' => 'none',
+                                    'fill' => $options['color2'],
+                                    'fill-opacity' => $options['opacity'],
                                     // 'r' => $options['size'] / 2
                                     'points' => implode(' ', $points)
                                 )
