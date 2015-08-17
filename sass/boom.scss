@@ -1,0 +1,96 @@
+$blue: #08f;
+$green: #0f8;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.outer {
+  overflow: hidden;
+}
+
+.inner {
+  width: 960px;
+  margin: 0 auto;
+}
+
+html {
+  font-family: 'Lato', sans-serif;
+  font-weight: 100;
+  background: darken($blue, 35);
+}
+
+h1, h2, h3 {
+  font-weight: 100;
+}
+
+#top {
+  background: $blue;
+  background: linear-gradient($blue, mix($blue, $green));
+  padding: 150px 0 100px;
+  text-align: center;
+  h1 {
+    font-size: 80px;
+    color: #fff;
+    text-shadow: 10px 10px 0 #000;
+    margin-bottom: 10px;
+    font-family: 'Holtwood One SC', serif;
+    transform: rotate(-5deg);
+  }
+  h2 {
+    color: #fff;
+    font-size: 20px;
+    margin-bottom: 100px;
+  }
+}
+
+.button {
+  background: $green;
+  display: inline-block;
+  padding: 20px 60px;
+  font-size: 20px;
+  color: #fff;
+  text-shadow: 0px 1px 2px darken($green, 25);
+  text-decoration: none;
+  border: 1px solid darken($green, 15);
+  border-radius: 10px;
+  border-bottom: 5px solid darken($green, 25);
+  transition: all 125ms;
+  &:hover {
+    background: #fff;
+    color: darken($green, 25);
+    text-shadow: none;
+  }
+}
+
+#content {
+  padding: 40px 0;
+  background: #fff;
+  box-shadow: 0px 0px 50px rgba(0, 0, 0, .25);
+  h3 {
+    font-size: 40px;
+    margin-bottom: 20px;
+  }
+  ul {
+    list-style-type: none;
+  }
+  li {
+    display: inline-block;
+    width: 240px;
+    height: 240px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+}
+
+#footer {
+  padding: 20px 0;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+  a {
+    color: $blue;
+    text-decoration: none;
+  }
+}
