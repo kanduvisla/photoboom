@@ -1,0 +1,79 @@
+* {
+  margin: 0;
+  padding: 0; }
+
+.outer {
+  overflow: hidden; }
+
+.inner {
+  width: 960px;
+  margin: 0 auto; }
+
+html {
+  font-family: 'Lato', sans-serif;
+  font-weight: 100;
+  background: #00294d; }
+
+h1, h2, h3 {
+  font-weight: 100; }
+
+#top {
+  background: #08f;
+  background: linear-gradient(#08f, #00c3c3);
+  padding: 150px 0 100px;
+  text-align: center; }
+  #top h1 {
+    font-size: 80px;
+    color: #fff;
+    text-shadow: 10px 10px 0 #000;
+    margin-bottom: 10px;
+    font-family: 'Holtwood One SC', serif;
+    transform: rotate(-5deg); }
+  #top h2 {
+    color: #fff;
+    font-size: 20px;
+    margin-bottom: 100px; }
+
+.button {
+  background: #0f8;
+  display: inline-block;
+  padding: 20px 60px;
+  font-size: 20px;
+  color: #fff;
+  text-shadow: 0px 1px 2px #008044;
+  text-decoration: none;
+  border: 1px solid #00b35f;
+  border-radius: 10px;
+  border-bottom: 5px solid #008044;
+  transition: all 125ms; }
+  .button:hover {
+    background: #fff;
+    color: #008044;
+    text-shadow: none; }
+
+#content {
+  padding: 40px 0;
+  background: #fff;
+  box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.25); }
+  #content h3 {
+    font-size: 40px;
+    margin-bottom: 20px; }
+  #content ul {
+    list-style-type: none; }
+  #content li {
+    display: inline-block;
+    width: 240px;
+    height: 240px;
+    border: 1px solid #ccc;
+    border-radius: 10px; }
+
+#footer {
+  padding: 20px 0;
+  color: #fff;
+  text-align: center;
+  font-size: 14px; }
+  #footer a {
+    color: #08f;
+    text-decoration: none; }
+
+/*# sourceMappingURL=boom.css.map */
